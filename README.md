@@ -19,8 +19,9 @@ The APEX V-6.0 Kernel is a radical software engineering paradigm designed to def
 - **Asynchronous CI/CD Compiler**: Flawless. Guaranteed cryptographic-grade correctness mathematically surpassing probabilistic guessing.
 
 ## Documentation Included
-- `APEX_V6_FORMAL_KERNEL.md` — The complete system breakdown.
-- `NOTEBOOK_LLM_V6_SOCIAL.md` — Full NotebookLLM optimized ingestion source and social distribution scripts (LinkedIn / Twitter).
+- `ARCHITECTURE.md` — The formal, algorithmic whitepaper with Mermaid schemas. **(Start Here)**
+- `APEX_V6_FORMAL_KERNEL.md` — The complete original manifest breakdown.
+- `NOTEBOOK_LLM_V6_SOCIAL.md` — Full NotebookLLM optimized ingestion source and social distribution scripts.
 
 ## License
 MIT (Open-Weights Architectural Specification).
