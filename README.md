@@ -20,6 +20,8 @@ The APEX V-6.0 Kernel is a radical software engineering paradigm designed to def
 
 ## Documentation Included
 - `ARCHITECTURE.md` — The formal, algorithmic whitepaper with Mermaid schemas. **(Start Here)**
+- `layer1_mcts_alpha_routing.py` — [Python Prototype] Functional execution node mapping Gemini directly into structural UCB logic.
+- `layer4_destroyer_gate.py` — [Python Prototype] Context-blind adversarial payload vetting node.
 - `APEX_V6_FORMAL_KERNEL.md` — The complete original manifest breakdown.
 - `NOTEBOOK_LLM_V6_SOCIAL.md` — Full NotebookLLM optimized ingestion source and social distribution scripts.
 
