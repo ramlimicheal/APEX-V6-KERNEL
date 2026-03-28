@@ -16,9 +16,17 @@ The APEX V-6.0 Kernel is a radical software engineering paradigm designed to def
 
 ## Deployment Context
 - **Synchronous Consumer Web API**: Fails instantly. Cascading HTTP 504 timeouts due to extreme pipeline latency.
-- **Asynchronous CI/CD Compiler**: Flawless. Guaranteed cryptographic-grade correctness mathematically surpassing probabilistic guessing.
+## Quickstart: The End-to-End Orchestrator
 
-## Documentation Included
+To watch the asymmetric theory execute live, install dependencies and run the root pipeline. This strings Layer 1 through Layer 4 sequentially, validating a target architectural schema.
+
+```bash
+pip install -r requirements.txt
+python main.py
+```
+
+## Internal Architecture Documentation
+- `main.py` — The unified execution framework piping logic through the 4 bounds.
 - `ARCHITECTURE.md` — The formal, algorithmic whitepaper with Mermaid schemas. **(Start Here)**
 - `layer1_mcts_alpha_routing.py` — [Python Prototype] Functional execution node mapping Gemini directly into structural UCB logic.
 - `layer2_neuro_symbolic_grounding.py` — [Python Prototype] Neuro-Symbolic integration forcibly typing output to ZSMT constraints.

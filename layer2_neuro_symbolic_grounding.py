@@ -38,16 +38,16 @@ class NeuroSymbolicZ3Compiler:
         logging.info("[Z3 PROVER: SATISFIED] Invariants mathematically proven. Theorem execution holds.")
         return True
 
+class MockGeminiSMTClient:
+    def generate_content(self, _):
+        class Response: 
+            # Pure mathematical structural constraints instead of probabilistic python code
+            text = "(declare-const memory Int) (assert (> memory 100)) (check-sat)"
+        return Response()
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     
-    class MockGeminiSMTClient:
-        def generate_content(self, _):
-            class Response: 
-                # Pure mathematical structural constraints instead of probabilistic python code
-                text = "(declare-const memory Int) (assert (> memory 100)) (check-sat)"
-            return Response()
-            
     try:
         compiler = NeuroSymbolicZ3Compiler(MockGeminiSMTClient())
         spec = compiler.generate_formal_specification("Guarantee heap allocation exceeds baseline.")
