@@ -44,11 +44,21 @@ class DAGSupervisorEngine:
             agent = MockGeminiFlashMicroAgent(agent_id=str(i).zfill(3))
             tasks.append(self.process_stateless_node(agent, component))
             
-        # Await horizontal scaling (scatter-gather topology)
-        gathered_results = await asyncio.gather(*tasks)
+        # Await horizontal scaling (scatter-gather topology) with explicit fault isolation
+        gathered_results = await asyncio.gather(*tasks, return_exceptions=True)
         
-        logging.info("[HIVE COMPILED] Directed Acyclic Graph state aggregated successfully via explicit JSON piping.")
-        return {"hive_consensus": gathered_results}
+        successful_nodes = []
+        faulted_nodes = []
+        
+        for result in gathered_results:
+            if isinstance(result, Exception):
+                logging.error(f"[HIVE FRACTURE] Micro-Agent failed: {result}")
+                faulted_nodes.append(str(result))
+            else:
+                successful_nodes.append(result)
+                
+        logging.info(f"[HIVE COMPILED] DAG Aggregated. Success: {len(successful_nodes)} | Faults: {len(faulted_nodes)}")
+        return {"hive_consensus": successful_nodes, "hive_faults": faulted_nodes}
 
 async def trigger_layer3_simulation():
     logging.basicConfig(level=logging.INFO)

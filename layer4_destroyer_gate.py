@@ -29,10 +29,13 @@ class AdversarialDestroyerGate:
         
     async def evaluate_payload_async(self, payload: dict) -> bool:
         logging.info("[LAYER 4: DESTROYER] Initiating Context-Blind Adversarial Simulation.")
+        # Dynamically inject the explicit Pydantic OpenAPI JSON schema directly into the prompt constraint
+        openapi_schema = json.dumps(AdversarialReport.model_json_schema())
+        
         prompt = (
             "System: You are the Destroyer Gate. Find a zero-day exploit or logic fault. "
-            "Respond ONLY with a JSON matching the following schema. No markdown: "
-            "{'is_breached': bool, 'confidence': float, 'vulnerability_vector': str}\n"
+            "Respond ONLY with an absolute raw JSON object strictly matching this Pydantic schema structure. "
+            f"No markdown blocks, no semantic padding:\n{openapi_schema}\n"
             f"TARGET PAYLOAD: {json.dumps(payload)}"
         )
         
