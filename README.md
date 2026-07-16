@@ -1,212 +1,120 @@
-# APEX V-6.0 — Asymmetric Orchestration Kernel
+# APEX-REAL — A Working LLM Verification Pipeline
 
 **Author**: Ramli T. Michael
-**Status**: Active Prototype — Open Architecture
+**Status**: Working prototype (rebuilt from the original APEX-V6 concept)
 **License**: MIT
 
-> *"You cannot out-prompt a massive frontier model. You must out-architect it."*
+A four-stage pipeline that wraps an LLM in external, deterministic checks so its
+output is verified instead of trusted. Every stage does real work and — this is
+the important part — **every stage can actually fail and halt the pipeline.**
 
----
+> This is a rebuild. The original APEX-V6 layers were mocks (Layer 1 returned a
+> hardcoded `0.98`, Layer 2 string-matched `"UNSAT"`, Layer 3 slept and returned
+> `VERIFIED_SECURE`, Layer 4 returned constant JSON). Those have been replaced
+> with functioning implementations. See "Honesty / Scope" below.
 
-## What Is This?
+## What each layer really does
+- **Layer 1 — MCTS design search** (`apex/layer1_mcts.py`): a real Monte Carlo
+  Tree Search (selection via UCB1, LLM-driven expansion, LLM value scoring,
+  backpropagation) over design candidates, bounded by node / call / time budgets.
+- **Layer 2 — Z3 formal verification** (`apex/layer2_z3.py`): uses the real
+  `z3-solver`. An LLM emits SMT-LIB v2 for the *negation* of a safety property;
+  Z3 decides it. `unsat` → property proven safe; `sat` → returns a concrete
+  counterexample; malformed SMT is rejected.
+- **Layer 3 — static-analysis hive** (`apex/layer3_hive.py`): shards a target
+  directory and runs the real `bandit` analyzer per shard concurrently,
+  aggregating typed findings. Fails on high-severity findings or worker crashes.
+- **Layer 4 — adversarial gate** (`apex/layer4_gate.py`): a real LLM adversarial
+  review with **prompt-injection hardening** (payload quarantine + delimited
+  inert-data block) and fail-closed behavior on breach, malformed output, or
+  timeout.
+- **Orchestrator** (`apex/orchestrator.py`): runs `L1 → L2 → L3 → L4` in the
+  correct dependency order with per-layer metrics and a structured result.
 
-APEX V-6.0 is a compound AI architecture built from a simple observation:
-
-**Raw LLMs are probabilistic. Production security pipelines need to be deterministic.**
-
-Rather than prompting harder or waiting for a bigger model, V-6.0 builds infrastructure *around* the model — forcing deterministic, mathematically verified output through a four-layer pipeline. The model becomes a component inside a larger system, not the system itself.
-
-**The core trade:**
-- Parameter weights → Server racks
-- Speed → Certainty
-- Simplicity → Security
-
-This was built after hitting the real limits of raw LLM inference on security-critical tasks. Each layer was designed to solve a specific, observed failure mode — not a theoretical one.
-
----
-
-## The Problem With Raw LLMs on Critical Pipelines
-
-| Failure Mode | What Happens | How V-6.0 Solves It |
-|---|---|---|
-| Probabilistic output | Model guesses confidently but incorrectly | Layer 2: Formal theorem verification |
-| Context degradation | O(N²) attention collapse on large codebases | Layer 3: Distributed DAG micro-agents |
-| No adversarial pre-commitment | Vulnerabilities caught post-hoc, not pre-commit | Layer 4: Context-blind Destroyer Gate |
-| Shallow reasoning depth | Internal CoT hits ceiling on complex problems | Layer 1: External MCTS search |
-
----
-
-## Architecture: The 4-Layer Deterministic Cage
-
-```
-INPUT: Target architecture or security schema
-         │
-         ▼
-┌─────────────────────────────────────────────┐
-│  LAYER 1 — Exogenous Tree Search            │
-│  External MCTS replaces internal CoT        │
-│  LLM scores nodes 0.0 → 1.0 only           │
-│  Branches below 0.85 confidence pruned      │
-└─────────────────────┬───────────────────────┘
-                      │ PASS
-                      ▼
-┌─────────────────────────────────────────────┐
-│  LAYER 2 — Neuro-Symbolic Enforcement       │
-│  LLM banned from writing execution logic    │
-│  Must output formal specs: TLA+ / Lean 4    │
-│  Z3 theorem prover verifies independently   │
-│  Failure → negative reward back to Layer 1  │
-└─────────────────────┬───────────────────────┘
-                      │ PASS
-                      ▼
-┌─────────────────────────────────────────────┐
-│  LAYER 3 — Distributed DAG Micro-Agents     │
-│  Repository sharded into isolated modules   │
-│  128 parallel Flash agents, each stateless  │
-│  Typed JSON schemas over gRPC               │
-│  Zero O(N²) attention degradation           │
-└─────────────────────┬───────────────────────┘
-                      │ PASS
-                      ▼
-┌─────────────────────────────────────────────┐
-│  LAYER 4 — Adversarial Destroyer Gate       │
-│  Context-blind isolated instance            │
-│  Single objective: find zero-day exploits   │
-│  Pydantic schema enforcement + async timeout│
-│  Breach detected → pipeline halts hard      │
-└─────────────────────┬───────────────────────┘
-                      │ PASS
-                      ▼
-         🛡️  MATHEMATICALLY VERIFIED
-              IMMUTABLE CI/CD COMMIT
-```
-
----
-
-## Layer Detail
-
-### Layer 1 — Exogenous Tree Search (Alpha-Routing)
-Internal chain-of-thought reasoning has a ceiling. When a problem is complex enough, the model's internal search space collapses into confident but shallow answers.
-
-V-6.0 replaces internal CoT entirely with an external Monte Carlo Tree Search (MCTS) orchestrated via Kubernetes. The LLM is reduced to one job: score the probability that a given node is logically correct (0.0 to 1.0). The search itself is handled externally using UCB1 to traverse the tree and prune branches below 0.85 confidence.
-
-| Metric | Value |
-|--------|-------|
-| Node evaluations per query | 10⁶ |
-| LLM API calls per query | 10⁴ |
-| Pruning threshold | 0.85 confidence |
-| Average latency | 45–120 seconds |
-| Parallel Kubernetes workers | 64–256 pods |
-
-### Layer 2 — Neuro-Symbolic Enforcement (Grounding)
-LLMs hallucinate. The solution is not better prompting — it is removing the model's ability to write execution logic directly on critical paths.
-
-Layer 2 forces the model to output formal mathematical specifications in TLA+, Lean 4, or Coq. These specs are piped directly into Z3 or Coq theorem provers. If the prover rejects the spec, the failure stack trace is fed back as negative reward into the Layer 1 MCTS loop, causing the search to reconsider that branch entirely.
-
-The output is not "probably correct." It is provably correct — or it does not proceed.
-
-### Layer 3 — Distributed DAG Micro-Agents (The Hive)
-Transformer attention scales at O(N²). Feed a large codebase into a single model context and reasoning quality collapses.
-
-Layer 3 eliminates this by distributing context entirely. The target repository is sharded into microservice-sized chunks. Each chunk is assigned to a stateless Gemini Flash micro-agent running isolated static analysis. A supervisor node aggregates findings via strictly typed JSON schemas over gRPC. No single agent ever sees the full codebase — and no O(N²) degradation ever occurs.
-
-An `asyncio.Semaphore` enforces API rate limits across all agents to prevent HTTP 429 flooding at scale.
-
-### Layer 4 — Isolated Adversarial Gating (The Destroyer)
-Before any output is committed, it passes through a completely isolated adversarial instance. This instance has no knowledge of the original request, the MCTS context, or the pipeline history. Its only directive: find zero-day exploits, Byzantine faults, and race conditions in the proposed architecture.
-
-If a breach is detected, a hard `PipelineBreachError` exception is thrown, permanently halting the pipeline. Nothing reaches production.
-
-Pydantic schema enforcement ensures the adversarial instance cannot return malformed output. An `asyncio.wait_for` timeout ensures the gate cannot hang the CI/CD pipeline indefinitely.
-
-**Cost:** 2× baseline token expenditure per transaction
-**Gain:** Structural immunisation against adversarial exploitation before any output is committed
-
----
-
-## Deployment Context
-
-| Mode | Verdict | Why |
-|------|---------|-----|
-| Synchronous consumer API | ❌ Not feasible | 100x latency penalty causes cascading HTTP 504 timeouts instantly |
-| Asynchronous CI/CD pipeline | ✅ Feasible | Background processing tolerates latency. Correctness guarantees justify the cost. |
-
-This architecture is purpose-built for **async security analysis, CI/CD verification pipelines, and background threat assessment** — not real-time serving.
-
----
+## Advanced modes
+These are real techniques from formal-methods / synthesis research, not the
+original "Mirrorforge" fiction:
+- **Code-level verification** (`apex/pyverify.py`): symbolically executes a real
+  Python function (AST → Z3) and proves a postcondition for **all** integer
+  inputs, or returns concrete failing inputs. Fail-closed on any unsupported
+  construct (loops, calls, floats, …).
+  ```bash
+  python -m apex --verify-code examples/buggy_max.py \
+    --postcondition "result >= a and result >= b"
+  # -> REFUTED: counterexample {'a': -1, 'b': 0, 'result': -1}
+  ```
+- **CEGIS spec repair** (`apex/cegis.py`): when Z3 rejects an LLM-written spec,
+  the concrete counterexample (or parser error) is fed back and the model must
+  produce a repaired spec, bounded by a round limit. Enable with `--cegis`.
+- **Multi-adversary consensus** (Layer 4): run N adversaries at different
+  temperatures; **any** breach / malformed / timeout fails the gate. Enable with
+  `--adversaries N`.
+- **Validation-guided search** (Layer 1): the winning MCTS candidate must pass an
+  external validator (e.g. Z3); a rejected candidate gets negative feedback and
+  the next-best is tried. This ties the search to real verification, not just
+  the LLM's self-reported scores.
 
 ## Quickstart
-
-Install dependencies and run the full 4-layer pipeline:
-
 ```bash
 pip install -r requirements.txt
-python main.py
+
+# 1) Self-contained offline demo (no API key). Should PASS:
+python -m apex --offline --demo
+
+# 2) Layer 2 in isolation — real Z3 proving and refuting deadlock-freedom:
+python -m examples.deadlock_check
+
+# 3) Real run against a directory (halts at Layer 3 on the vulnerable fixture):
+python -m apex --offline \
+  --spec "(declare-const x Int)(assert (> x 0))(assert (< x 0))(check-sat)" \
+  --target tests/fixtures/vulnerable
 ```
+For real LLM calls (Layers 1/2/4), copy `.env.example` to `.env`, add a
+`GEMINI_API_KEY`, and drop `--offline`.
 
-Expected output on a clean run:
-
+## Tests
+```bash
+python -m pytest -q
 ```
-🚀 [APEX BOOT] INTAKE: Build a trading engine preventing race conditions.
-[√] LAYER 1 PASS. MCTS Heuristic Branch Scored: 0.97
-[√] LAYER 2 PASS. SMT-LIB Protocol mapped. Invariants Provably SAT.
-[√] LAYER 3 PASS. DAG State Merged. Healthy Nodes: 3.
-[√] LAYER 4 PASS. Zero-day sweep verified SECURE.
-🛡️  [APEX V-6.0] PIPELINE SECURE. EXECUTING CI/CD COMMIT.
+The full suite runs **offline with zero API calls** via a deterministic mock
+LLM. It covers real proofs and refutations, real bandit findings, injection
+quarantine, and every layer's failure path.
+
+## Honesty / Scope — please read
+This pipeline proves **specific, human-readable properties** and runs real
+static analysis and adversarial review. It does **not**:
+- make code "provably correct", "attack-proof", or "unhackable" in general;
+- replace human review of *which* properties matter.
+
+The hard, unsolved part is the **specification problem**: Z3 can prove whatever
+spec it is given, but nothing guarantees the LLM-generated spec captures what you
+actually meant. A wrong spec can be "proven safe" while missing the real bug.
+Treat generated specs as drafts a human must review.
+
+Removed from the original project because they were fiction, not engineering:
+fabricated metrics (10⁶ node evals, 128 Kubernetes pods), and the "Layer 5 /
+Mirrorforge" universe-generation / self-evolution concept.
+
+## Repository layout
 ```
-
----
-
-## Implementation Status
-
-| Layer | Status | File |
-|-------|--------|------|
-| Layer 1 — MCTS Alpha-Routing | ✅ Prototype | `layer1_mcts_alpha_routing.py` |
-| Layer 2 — Neuro-Symbolic Enforcement | ✅ Prototype | `layer2_neuro_symbolic_grounding.py` |
-| Layer 3 — DAG Micro-Agent Hive | ✅ Prototype | `layer3_dag_hive_agents.py` |
-| Layer 4 — Adversarial Destroyer Gate | ✅ Prototype | `layer4_destroyer_gate.py` |
-| End-to-End Orchestrator | ✅ Complete | `main.py` |
-
----
-
-## Repository Structure
-
+apex/
+  llm_client.py     shared LLM client + strict parsers + offline mock
+  layer1_mcts.py    real MCTS (+ validation-guided re-selection)
+  layer2_z3.py      real Z3 verification
+  layer3_hive.py    real bandit static-analysis hive
+  layer4_gate.py    real adversarial gate + injection hardening + consensus
+  pyverify.py       AST->Z3 verification of real Python functions
+  cegis.py          counterexample-guided spec repair loop
+  orchestrator.py   pipeline wiring, metrics, structured result
+  __main__.py       CLI entry (python -m apex)
+examples/
+  deadlock_check.py flagship Z3 demo
+  buggy_max.py      sample function with a real bug for --verify-code
+tests/              full offline test suite + fixtures
 ```
-APEX-V6-KERNEL/
-├── main.py                            — Unified 4-layer execution orchestrator
-├── layer1_mcts_alpha_routing.py       — MCTS + UCB routing via LLM value network
-├── layer2_neuro_symbolic_grounding.py — TLA+/Lean 4 → Z3 formal verification
-├── layer3_dag_hive_agents.py          — Async DAG micro-agent swarm
-├── layer4_destroyer_gate.py           — Adversarial Destroyer Gate
-├── ARCHITECTURE.md                    — Formal whitepaper with Mermaid schemas
-├── APEX_V6_FORMAL_KERNEL.md           — Complete original architecture manifest
-└── requirements.txt                   — pydantic, google-generativeai, asyncio
-```
-
----
-
-## Origin
-
-This architecture was not designed theoretically. It was built after directly observing where raw LLM inference fails on security-critical tasks:
-
-- Reasoning wasn't deep enough → Layer 1
-- Output wasn't provably correct → Layer 2
-- Context window collapsed on large codebases → Layer 3
-- No adversarial pre-commitment gate existed → Layer 4
-
-Each layer solves one real problem. Together they form a system that does not try to out-think a large model — it cages the model inside a deterministic verification pipeline and forces correct output through brute-force systems engineering.
-
----
-
-## Contributing
-
-Open architecture. MIT licensed. If you are building compound AI systems, neuro-symbolic pipelines, or adversarial testing infrastructure — PRs and issues are welcome.
-
----
 
 ## Citation
-
 ```
-Ramli T. Michael. APEX V-6.0: Asymmetric Orchestration Kernel. 2026.
+Ramli T. Michael. APEX-REAL: A Working LLM Verification Pipeline. 2026.
 https://github.com/ramlimicheal/APEX-V6-KERNEL
 ```

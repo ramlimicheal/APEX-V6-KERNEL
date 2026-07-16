@@ -1,3 +1,6 @@
+> **STATUS: ASPIRATIONAL MANIFEST — not an accurate description of the code.**
+> Kept for historical context. The working implementation and its real,
+> tested scope live in `README.md` and the `apex/` package.
 # APEX CALIBRATION V-6.0: ASYMMETRIC ORCHESTRATION KERNEL
 
 ## LAYER 1: EXOGENOUS TREE SEARCH (Alpha-Routing)

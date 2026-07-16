@@ -1,3 +1,7 @@
+> **STATUS: ASPIRATIONAL DESIGN DOC — not an accurate description of the code.**
+> This file describes the *original vision*. Metrics like "10⁶ node evaluations"
+> and "64–256 Kubernetes pods" were never implemented and are not real numbers.
+> For what the code actually does, see `README.md` and the `apex/` package.
 # TECHNICAL SPECIFICATION: APEX V-6.0 KERNEL
 
 > **Design Authority**: RAMLI.T.MICHAEL
