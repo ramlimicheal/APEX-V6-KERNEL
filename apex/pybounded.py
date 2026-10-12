@@ -189,10 +189,6 @@ def _is_int(v) -> bool:
     return isinstance(v, z3.ArithRef) and v.is_int()
 
 
-def _sort(kind):
-    return IntList if kind == "list" else z3.IntSort()
-
-
 def _zero(kind):
     return _EMPTY_INTLIST if kind == "list" else _ZERO
 
@@ -203,7 +199,7 @@ def _const_int(v) -> Optional[int]:
 
 
 def _const_list(terms, kind) -> SymList:
-    arr = z3.K(_sort(kind), _zero(kind))
+    arr = z3.K(z3.IntSort(), _zero(kind))
     for i, t in enumerate(terms):
         arr = z3.Store(arr, i, t)
     return SymList(arr, z3.IntVal(len(terms)), kind if terms or kind == "str" else None, len(terms))
@@ -226,7 +222,7 @@ def _retype(lst: SymList, kind) -> SymList:
         return lst
     if lst.kind is not None:
         raise Unsupported(f"mixing list kinds '{lst.kind}' and '{kind}'")
-    return SymList(z3.K(_sort(kind), _zero(kind)), lst.length, kind, lst.maxlen, lst.uids)
+    return SymList(z3.K(z3.IntSort(), _zero(kind)), lst.length, kind, lst.maxlen, lst.uids)
 
 
 def _maxlen_add(a, b):
@@ -708,7 +704,7 @@ class _Executor:
             if target.slice.step is not None:
                 raise Unsupported("extended slice assignment")
             lo = None if target.slice.lower is None else self._int(self._eval(target.slice.lower, p))
-            hi = None if target.slice.upper is None else self._int(self._eval(target.slice.upper, p))
+            hi = base.length if target.slice.upper is None else self._int(self._eval(target.slice.upper, p))
             if not isinstance(v, SymList):
                 raise Unsupported("slice assignment from a non-list")
             new = self._concat(self._concat(self._slice(base, None, lo), v), self._slice(base, hi, None))
@@ -1273,7 +1269,7 @@ class _Executor:
             k, term = self._elem_term(v)
             kind = _unify_kind(kind, k)
             if arr is None:
-                arr = z3.K(_sort(kind), _zero(kind))
+                arr = z3.K(z3.IntSort(), _zero(kind))
             stored = z3.Store(arr, length, term)
             arr = _ite(g, stored, arr)
             length = z3.simplify(_ite(g, length + 1, length))
