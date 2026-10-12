@@ -80,6 +80,77 @@ The full suite runs **offline with zero API calls** via a deterministic mock
 LLM. It covers real proofs and refutations, real bandit findings, injection
 quarantine, and every layer's failure path.
 
+## Benchmark: QuixBugs
+How much of a public bug benchmark can the Z3 verifier really catch? We ran
+it on all 40 Python programs of [QuixBugs](https://github.com/jkoppel/QuixBugs)
+(vendored under `bench/quixbugs/`, MIT, pinned commit `4257f44`). Each program
+has a buggy and a correct version. No LLM is involved and no API key is needed.
+Every number comes from `bench/results_*.json`, and `bench/REPORT.md` has the
+per-program table and the reason for every outcome.
+
+| step | caught | missed | false_alarm | unsupported |
+|---|---:|---:|---:|---:|
+<!-- BENCH-TABLE -->
+| baseline: original `verify_function` | 0 | 0 | 0 | 40 |
+| (a) + bounded loops | 1 | 0 | 0 | 39 |
+| (b) + inlined calls | 2 | 0 | 0 | 38 |
+| (c) + int lists / str | 22 | 0 | 0 | 18 |
+<!-- /BENCH-TABLE -->
+
+* **caught** means: (1) the buggy version is refuted with a concrete input,
+  (2) **a real Python run of the buggy QuixBugs file on that input confirms it**
+  (wrong output against the spec, an exception, or a timeout), and (3) the
+  correct version is proved up to the bound. In equivalence mode it means that
+  real runs of both files behave differently on the reported input.
+* **unsupported** is never counted as caught. It always carries the exact
+  reason: graph Node objects, dicts, floats, generators, default arguments,
+  `str.rfind`, and so on.
+* **false_alarm** = the correct version was refuted. It is 0 at every step.
+  During development, two false alarms (to_base, next_permutation) and one
+  crash on lists of lists showed up. All three were engine bugs (an
+  incremental-solver model that did not satisfy its query, `a[i:] = ...`
+  slice assignment, a wrong array sort). They were fixed before the runs above,
+  and every `sat` model is now re-checked against the query before it is
+  trusted.
+* The baseline column is the **original** `verify_function`, unchanged. On 3
+  programs it does not fail closed: it crashes with a raw `Z3Exception`
+  (`not x` on an int). The report records this as a crash.
+
+**What "bounded" means.** `apex/pybounded.py` extends `pyverify` with
+(a) loops unrolled up to K = 8 iterations, (b) calls to functions in the same
+file inlined up to K = 8 nested calls, and (c) int lists and strings as Z3
+arrays with a symbolic length. Every unroll carries an *unwinding assertion*: an
+input that needs more than K iterations is reported, never silently dropped.
+So **"proved up to bound K"** means: for every input that meets the
+precondition, has lists no longer than the per-program cap (8, or 3–4 where
+symbolic lengths were too slow) and stays inside the listed int domain (e.g.
+`n <= 255` for bitcount), the function finishes within K and meets the
+postcondition. It is **not** a proof for larger inputs. Equivalence mode (d)
+compares the buggy and correct files directly, with K = 12 and lists of
+length 0..4. Its false-alarm check is each correct file against itself.
+
+**Known limits.**
+* **A wrong spec can still be "proved".** The postconditions in
+  `bench/specs.py` were written from the QuixBugs docstrings (one line each,
+  citing the docstring). If a spec is too weak, a bug passes. `next_permutation`
+  has an explicitly *partial* spec: "a permutation, lexicographically greater",
+  not "the next one". Specs written by an LLM have the same problem.
+* The specs were written knowing which programs are buggy, and the int domains
+  and list caps were chosen so the solver finishes. All of them are listed in
+  `bench/REPORT.md`.
+* 18 of 40 programs (graphs, dicts, floats, generators, tuples, string methods)
+  are outside the modeled subset in spec mode.
+
+Reproduce (about 40 min on 4 cores; `pip install -r requirements.txt` first):
+```bash
+python -m bench.run --step baseline   # original verify_function
+python -m bench.run --step loops      # + (a)
+python -m bench.run --step calls      # + (b)
+python -m bench.run --step lists      # + (c)
+python -m bench.run --step equiv      # (d) bounded equivalence
+python -m bench.report                # rebuild bench/REPORT.md
+```
+
 ## Honesty / Scope — please read
 This pipeline proves **specific, human-readable properties** and runs real
 static analysis and adversarial review. It does **not**:
@@ -104,6 +175,7 @@ apex/
   layer3_hive.py    real bandit static-analysis hive
   layer4_gate.py    real adversarial gate + injection hardening + consensus
   pyverify.py       AST->Z3 verification of real Python functions
+  pybounded.py      bounded loops / calls / lists + bounded equivalence
   cegis.py          counterexample-guided spec repair loop
   orchestrator.py   pipeline wiring, metrics, structured result
   __main__.py       CLI entry (python -m apex)
@@ -111,6 +183,7 @@ examples/
   deadlock_check.py flagship Z3 demo
   buggy_max.py      sample function with a real bug for --verify-code
 tests/              full offline test suite + fixtures
+bench/              QuixBugs benchmark: specs, runner, results, REPORT.md
 ```
 
 ## Citation
