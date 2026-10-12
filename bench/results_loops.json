@@ -22,11 +22,12 @@
    "name": "bitcount",
    "partial_spec": false,
    "domain": "n <= 255",
+   "list_cap": 8,
    "buggy": {
     "status": "refuted",
     "detail": "execution ends with bound",
     "counterexample": {
-     "n": 214
+     "n": 144
     },
     "predicted_outcome": "bound",
     "predicted": null,
@@ -45,13 +46,14 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'n': 214} confirmed by a real run",
-   "seconds": 17.9
+   "reason": "counterexample {'n': 144} confirmed by a real run",
+   "seconds": 24.8
   },
   {
    "name": "breadth_first_search",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "graph / linked-list Node objects are not modeled"
@@ -68,6 +70,7 @@
    "name": "bucketsort",
    "partial_spec": false,
    "domain": "k <= 8",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -84,6 +87,7 @@
    "name": "depth_first_search",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "graph / linked-list Node objects are not modeled"
@@ -100,6 +104,7 @@
    "name": "detect_cycle",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "graph / linked-list Node objects are not modeled"
@@ -116,6 +121,7 @@
    "name": "find_first_in_sorted",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -132,6 +138,7 @@
    "name": "find_in_sorted",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -148,6 +155,7 @@
    "name": "flatten",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "arbitrarily nested lists are not modeled"
@@ -164,6 +172,7 @@
    "name": "gcd",
    "partial_spec": false,
    "domain": "a <= 20 and b <= 20",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "call to gcd() needs extension (b) 'calls', not enabled at this step"
@@ -180,6 +189,7 @@
    "name": "get_factors",
    "partial_spec": false,
    "domain": "n <= 50",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list literal needs extension (c) 'lists', not enabled at this step"
@@ -196,6 +206,7 @@
    "name": "hanoi",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "only plain positional parameters are modeled (no defaults / *args)"
@@ -212,6 +223,7 @@
    "name": "is_valid_parenthesization",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -228,6 +240,7 @@
    "name": "kheapsort",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -244,6 +257,7 @@
    "name": "knapsack",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "lists of tuples are not modeled"
@@ -260,6 +274,7 @@
    "name": "kth",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -276,6 +291,7 @@
    "name": "lcs_length",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -291,7 +307,8 @@
   {
    "name": "levenshtein",
    "partial_spec": false,
-   "domain": "len(source) <= 3 and len(target) <= 3",
+   "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -308,6 +325,7 @@
    "name": "lis",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -323,7 +341,8 @@
   {
    "name": "longest_common_subsequence",
    "partial_spec": false,
-   "domain": "len(a) <= 3 and len(b) <= 3",
+   "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -340,6 +359,7 @@
    "name": "max_sublist_sum",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -356,6 +376,7 @@
    "name": "mergesort",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -372,6 +393,7 @@
    "name": "minimum_spanning_tree",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "dict arguments are not modeled"
@@ -387,7 +409,8 @@
   {
    "name": "next_palindrome",
    "partial_spec": false,
-   "domain": "len(digit_list) <= 3",
+   "domain": "True",
+   "list_cap": 3,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -403,7 +426,8 @@
   {
    "name": "next_permutation",
    "partial_spec": true,
-   "domain": "len(perm) <= 4",
+   "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -420,6 +444,7 @@
    "name": "pascal",
    "partial_spec": false,
    "domain": "n <= 6",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list literal needs extension (c) 'lists', not enabled at this step"
@@ -435,7 +460,8 @@
   {
    "name": "possible_change",
    "partial_spec": false,
-   "domain": "len(coins) <= 3 and total <= 4",
+   "domain": "total <= 4",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -451,7 +477,8 @@
   {
    "name": "powerset",
    "partial_spec": false,
-   "domain": "len(arr) <= 3",
+   "domain": "True",
+   "list_cap": 3,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -468,6 +495,7 @@
    "name": "quicksort",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -484,6 +512,7 @@
    "name": "reverse_linked_list",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "graph / linked-list Node objects are not modeled"
@@ -500,6 +529,7 @@
    "name": "rpn_eval",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "mixed float/str lists are not modeled"
@@ -516,6 +546,7 @@
    "name": "shortest_path_length",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "dict arguments are not modeled"
@@ -532,6 +563,7 @@
    "name": "shortest_path_lengths",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "dict arguments are not modeled"
@@ -548,6 +580,7 @@
    "name": "shortest_paths",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
@@ -564,6 +597,7 @@
    "name": "shunting_yard",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "mixed int/str lists are not modeled"
@@ -580,6 +614,7 @@
    "name": "sieve",
    "partial_spec": false,
    "domain": "max <= 9",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list literal needs extension (c) 'lists', not enabled at this step"
@@ -596,6 +631,7 @@
    "name": "sqrt",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "floats are not modeled"
@@ -611,7 +647,8 @@
   {
    "name": "subsequences",
    "partial_spec": false,
-   "domain": "-1 <= b - a <= 5 and k <= 4",
+   "domain": "-1 <= b - a <= 3 and k <= 3",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list literal needs extension (c) 'lists', not enabled at this step"
@@ -628,6 +665,7 @@
    "name": "to_base",
    "partial_spec": false,
    "domain": "num <= 255",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "string constant needs extension (c) 'lists', not enabled at this step"
@@ -644,6 +682,7 @@
    "name": "topological_ordering",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "graph Node objects are not modeled"
@@ -660,6 +699,7 @@
    "name": "wrap",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
