@@ -13,6 +13,7 @@
    "name": "bitcount",
    "partial_spec": false,
    "domain": "n <= 255",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -29,6 +30,7 @@
    "name": "breadth_first_search",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -45,6 +47,7 @@
    "name": "bucketsort",
    "partial_spec": false,
    "domain": "k <= 8",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -61,6 +64,7 @@
    "name": "depth_first_search",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -77,6 +81,7 @@
    "name": "detect_cycle",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -93,6 +98,7 @@
    "name": "find_first_in_sorted",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -109,6 +115,7 @@
    "name": "find_in_sorted",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: FunctionDef"
@@ -125,6 +132,7 @@
    "name": "flatten",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: For"
@@ -141,6 +149,7 @@
    "name": "gcd",
    "partial_spec": false,
    "domain": "a <= 20 and b <= 20",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported expression: Call"
@@ -157,6 +166,7 @@
    "name": "get_factors",
    "partial_spec": false,
    "domain": "n <= 50",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported expression: List"
@@ -173,6 +183,7 @@
    "name": "hanoi",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "only plain positional int args supported"
@@ -189,6 +200,7 @@
    "name": "is_valid_parenthesization",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -205,6 +217,7 @@
    "name": "kheapsort",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Import"
@@ -221,6 +234,7 @@
    "name": "knapsack",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: ImportFrom"
@@ -237,6 +251,7 @@
    "name": "kth",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -253,6 +268,7 @@
    "name": "lcs_length",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: ImportFrom"
@@ -268,7 +284,8 @@
   {
    "name": "levenshtein",
    "partial_spec": false,
-   "domain": "len(source) <= 3 and len(target) <= 3",
+   "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported constant: ''"
@@ -285,6 +302,7 @@
    "name": "lis",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -300,7 +318,8 @@
   {
    "name": "longest_common_subsequence",
    "partial_spec": false,
-   "domain": "len(a) <= 3 and len(b) <= 3",
+   "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "verifier crashed: Z3Exception: Value cannot be converted into a Z3 Boolean value"
@@ -317,6 +336,7 @@
    "name": "max_sublist_sum",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -333,6 +353,7 @@
    "name": "mergesort",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: FunctionDef"
@@ -349,6 +370,7 @@
    "name": "minimum_spanning_tree",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -364,7 +386,8 @@
   {
    "name": "next_palindrome",
    "partial_spec": false,
-   "domain": "len(digit_list) <= 3",
+   "domain": "True",
+   "list_cap": 3,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -380,7 +403,8 @@
   {
    "name": "next_permutation",
    "partial_spec": true,
-   "domain": "len(perm) <= 4",
+   "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: For"
@@ -397,6 +421,7 @@
    "name": "pascal",
    "partial_spec": false,
    "domain": "n <= 6",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -412,7 +437,8 @@
   {
    "name": "possible_change",
    "partial_spec": false,
-   "domain": "len(coins) <= 3 and total <= 4",
+   "domain": "total <= 4",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -428,7 +454,8 @@
   {
    "name": "powerset",
    "partial_spec": false,
-   "domain": "len(arr) <= 3",
+   "domain": "True",
+   "list_cap": 3,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -445,6 +472,7 @@
    "name": "quicksort",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 4,
    "buggy": {
     "status": "unsupported",
     "detail": "verifier crashed: Z3Exception: Value cannot be converted into a Z3 Boolean value"
@@ -461,6 +489,7 @@
    "name": "reverse_linked_list",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -477,6 +506,7 @@
    "name": "rpn_eval",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: FunctionDef"
@@ -493,6 +523,7 @@
    "name": "shortest_path_length",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "expected exactly one function definition"
@@ -509,6 +540,7 @@
    "name": "shortest_path_lengths",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -525,6 +557,7 @@
    "name": "shortest_paths",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -541,6 +574,7 @@
    "name": "shunting_yard",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -557,6 +591,7 @@
    "name": "sieve",
    "partial_spec": false,
    "domain": "max <= 9",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -573,6 +608,7 @@
    "name": "sqrt",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -588,7 +624,8 @@
   {
    "name": "subsequences",
    "partial_spec": false,
-   "domain": "-1 <= b - a <= 5 and k <= 4",
+   "domain": "-1 <= b - a <= 3 and k <= 3",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported expression: List"
@@ -605,6 +642,7 @@
    "name": "to_base",
    "partial_spec": false,
    "domain": "num <= 255",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -621,6 +659,7 @@
    "name": "topological_ordering",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
@@ -637,6 +676,7 @@
    "name": "wrap",
    "partial_spec": false,
    "domain": "True",
+   "list_cap": 8,
    "buggy": {
     "status": "unsupported",
     "detail": "unsupported statement: Assign"
