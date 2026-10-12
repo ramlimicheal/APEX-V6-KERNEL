@@ -95,6 +95,7 @@ per-program table and the reason for every outcome.
 | (a) + bounded loops | 1 | 0 | 0 | 39 |
 | (b) + inlined calls | 2 | 0 | 0 | 38 |
 | (c) + int lists / str | 22 | 0 | 0 | 18 |
+| (d) bounded equivalence | 20 | 0 | 0 | 20 |
 <!-- /BENCH-TABLE -->
 
 * **caught** means: (1) the buggy version is refuted with a concrete input,

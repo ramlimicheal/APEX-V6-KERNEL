@@ -1,0 +1,1079 @@
+{
+ "step": "equiv",
+ "quixbugs_commit": "4257f44b0ff1181dedaedee6a447e133219fcebf",
+ "options": {
+  "bound": 12,
+  "list_cap": 4,
+  "spec_bound": 64,
+  "loops": true,
+  "calls": true,
+  "lists": true,
+  "timeout_ms": 120000,
+  "feasibility_timeout_ms": 5000
+ },
+ "summary": {
+  "caught": 20,
+  "missed": 0,
+  "false_alarm": 0,
+  "unsupported": 20
+ },
+ "programs": [
+  {
+   "name": "bitcount",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "n": 3
+    },
+    "outcome_a": "bound",
+    "outcome_b": "value",
+    "predicted_a": null,
+    "predicted_b": 2
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "TIMEOUT"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "2"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'n': 3}: buggy {'kind': 'TIMEOUT'} vs correct {'kind': 'value', 'repr': '2'}",
+   "seconds": 9.4
+  },
+  {
+   "name": "breadth_first_search",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "bucketsort",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "arr": [
+      0,
+      1,
+      2,
+      2
+     ],
+     "k": 3
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": [
+     1,
+     2,
+     2,
+     3,
+     3
+    ],
+    "predicted_b": [
+     0,
+     1,
+     2,
+     2
+    ]
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "[1, 2, 2, 3, 3]"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "[0, 1, 2, 2]"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'arr': [0, 1, 2, 2], 'k': 3}: buggy {'kind': 'value', 'repr': '[1, 2, 2, 3, 3]'} vs correct {'kind': 'value', 'repr': '[0, 1, 2, 2]'}",
+   "seconds": 0.7
+  },
+  {
+   "name": "depth_first_search",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "detect_cycle",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "find_first_in_sorted",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "arr": [
+      7360,
+      7362
+     ],
+     "x": 7363
+    },
+    "outcome_a": "IndexError",
+    "outcome_b": "value",
+    "predicted_a": null,
+    "predicted_b": -1
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "IndexError"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "-1"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'arr': [7360, 7362], 'x': 7363}: buggy {'kind': 'IndexError'} vs correct {'kind': 'value', 'repr': '-1'}",
+   "seconds": 13.6
+  },
+  {
+   "name": "find_in_sorted",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "arr": [
+      22774,
+      22776
+     ],
+     "x": 22775
+    },
+    "outcome_a": "bound",
+    "outcome_b": "value",
+    "predicted_a": null,
+    "predicted_b": -1
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "RecursionError"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "-1"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'arr': [22774, 22776], 'x': 22775}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '-1'}",
+   "seconds": 14.4
+  },
+  {
+   "name": "flatten",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "arbitrarily nested lists are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "gcd",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "a": 13,
+     "b": 14
+    },
+    "outcome_a": "bound",
+    "outcome_b": "value",
+    "predicted_a": null,
+    "predicted_b": 1
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "RecursionError"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "1"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'a': 13, 'b': 14}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '1'}",
+   "seconds": 47.3
+  },
+  {
+   "name": "get_factors",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "n": 49
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": [
+     7
+    ],
+    "predicted_b": [
+     7,
+     7
+    ]
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "[7]"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "[7, 7]"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'n': 49}: buggy {'kind': 'value', 'repr': '[7]'} vs correct {'kind': 'value', 'repr': '[7, 7]'}",
+   "seconds": 54.1
+  },
+  {
+   "name": "hanoi",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "only plain positional parameters are modeled (no defaults / *args)",
+   "seconds": 0.0
+  },
+  {
+   "name": "is_valid_parenthesization",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "parens": "()(("
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": true,
+    "predicted_b": false
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "True"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "False"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'parens': '()(('}: buggy {'kind': 'value', 'repr': 'True'} vs correct {'kind': 'value', 'repr': 'False'}",
+   "seconds": 0.2
+  },
+  {
+   "name": "kheapsort",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "generator functions (yield) are not modeled",
+   "seconds": 0.1
+  },
+  {
+   "name": "knapsack",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "lists of tuples are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "kth",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "arr": [
+      -28941,
+      -2,
+      -1,
+      -28940
+     ],
+     "k": 1
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": -2,
+    "predicted_b": -28940
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "-2"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "-28940"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'arr': [-28941, -2, -1, -28940], 'k': 1}: buggy {'kind': 'value', 'repr': '-2'} vs correct {'kind': 'value', 'repr': '-28940'}",
+   "seconds": 7.0
+  },
+  {
+   "name": "lcs_length",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "import inside a function body",
+   "seconds": 0.0
+  },
+  {
+   "name": "levenshtein",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "source": "! !",
+     "target": " !"
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": 3,
+    "predicted_b": 1
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "3"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "1"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'source': '! !', 'target': ' !'}: buggy {'kind': 'value', 'repr': '3'} vs correct {'kind': 'value', 'repr': '1'}",
+   "seconds": 153.1
+  },
+  {
+   "name": "lis",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "arr": [
+      38023,
+      38021,
+      38022,
+      -1
+     ]
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": 1,
+    "predicted_b": 2
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "1"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "2"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'arr': [38023, 38021, 38022, -1]}: buggy {'kind': 'value', 'repr': '1'} vs correct {'kind': 'value', 'repr': '2'}",
+   "seconds": 8.7
+  },
+  {
+   "name": "longest_common_subsequence",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "a": "    ",
+     "b": " "
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": "    ",
+    "predicted_b": " "
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "'    '"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "' '"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'a': '    ', 'b': ' '}: buggy {'kind': 'value', 'repr': \"'    '\"} vs correct {'kind': 'value', 'repr': \"' '\"}",
+   "seconds": 62.3
+  },
+  {
+   "name": "max_sublist_sum",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "arr": [
+      -1,
+      1,
+      -1,
+      2
+     ]
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": 1,
+    "predicted_b": 2
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "1"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "2"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'arr': [-1, 1, -1, 2]}: buggy {'kind': 'value', 'repr': '1'} vs correct {'kind': 'value', 'repr': '2'}",
+   "seconds": 0.1
+  },
+  {
+   "name": "mergesort",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "arr": [
+      32
+     ]
+    },
+    "outcome_a": "bound",
+    "outcome_b": "value",
+    "predicted_a": null,
+    "predicted_b": [
+     32
+    ]
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "RecursionError"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "[32]"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'arr': [32]}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '[32]'}",
+   "seconds": 89.8
+  },
+  {
+   "name": "minimum_spanning_tree",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "next_palindrome",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "digit_list": [
+      9
+     ]
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": [
+     1,
+     0,
+     1
+    ],
+    "predicted_b": [
+     1,
+     1
+    ]
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "[1, 0, 1]"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "[1, 1]"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'digit_list': [9]}: buggy {'kind': 'value', 'repr': '[1, 0, 1]'} vs correct {'kind': 'value', 'repr': '[1, 1]'}",
+   "seconds": 0.4
+  },
+  {
+   "name": "next_permutation",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "perm": [
+      19944,
+      19943,
+      19945
+     ]
+    },
+    "outcome_a": "none",
+    "outcome_b": "value",
+    "predicted_a": null,
+    "predicted_b": [
+     19944,
+     19945,
+     19943
+    ]
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "None"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "[19944, 19945, 19943]"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'perm': [19944, 19943, 19945]}: buggy {'kind': 'value', 'repr': 'None'} vs correct {'kind': 'value', 'repr': '[19944, 19945, 19943]'}",
+   "seconds": 0.9
+  },
+  {
+   "name": "pascal",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "n": 3
+    },
+    "outcome_a": "IndexError",
+    "outcome_b": "value",
+    "predicted_a": null,
+    "predicted_b": [
+     [
+      1
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      1,
+      2,
+      1
+     ]
+    ]
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "IndexError"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "[[1], [1, 1], [1, 2, 1]]"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'n': 3}: buggy {'kind': 'IndexError'} vs correct {'kind': 'value', 'repr': '[[1], [1, 1], [1, 2, 1]]'}",
+   "seconds": 0.8
+  },
+  {
+   "name": "possible_change",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "coins": [
+      4,
+      1,
+      18841,
+      8855
+     ],
+     "total": 4
+    },
+    "outcome_a": "ValueError",
+    "outcome_b": "value",
+    "predicted_a": null,
+    "predicted_b": 2
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "ValueError"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "2"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'coins': [4, 1, 18841, 8855], 'total': 4}: buggy {'kind': 'ValueError'} vs correct {'kind': 'value', 'repr': '2'}",
+   "seconds": 4.9
+  },
+  {
+   "name": "powerset",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "unknown",
+    "detail": "solver returned unknown (; timeout; timeout)",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "outcome": "unsupported",
+   "reason": "solver returned unknown",
+   "seconds": 241.5
+  },
+  {
+   "name": "quicksort",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "unknown",
+    "detail": "solver returned unknown (; smt tactic failed to show goal to be sat/unsat (incomplete (theory array)); smt tactic failed to show goal to be sat/unsat (incomplete (theory array)))",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "outcome": "unsupported",
+   "reason": "solver returned unknown",
+   "seconds": 70.7
+  },
+  {
+   "name": "reverse_linked_list",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "rpn_eval",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "mixed float/str lists are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_path_length",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_path_lengths",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_paths",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shunting_yard",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "mixed int/str lists are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "sieve",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "max": 2
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": [],
+    "predicted_b": [
+     2
+    ]
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "[]"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "[2]"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'max': 2}: buggy {'kind': 'value', 'repr': '[]'} vs correct {'kind': 'value', 'repr': '[2]'}",
+   "seconds": 3.3
+  },
+  {
+   "name": "sqrt",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "floats are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "subsequences",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "a": 0,
+     "b": 3,
+     "k": 1
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": [],
+    "predicted_b": [
+     [
+      0
+     ],
+     [
+      1
+     ],
+     [
+      2
+     ]
+    ]
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "[]"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "[[0], [1], [2]]"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'a': 0, 'b': 3, 'k': 1}: buggy {'kind': 'value', 'repr': '[]'} vs correct {'kind': 'value', 'repr': '[[0], [1], [2]]'}",
+   "seconds": 0.5
+  },
+  {
+   "name": "to_base",
+   "in_scope": true,
+   "buggy_vs_correct": {
+    "status": "different",
+    "detail": "implementations disagree",
+    "bound": 12,
+    "counterexample": {
+     "num": 136,
+     "b": 2
+    },
+    "outcome_a": "value",
+    "outcome_b": "value",
+    "predicted_a": "00010001",
+    "predicted_b": "10001000"
+   },
+   "correct_vs_correct": {
+    "status": "equivalent_up_to_bound",
+    "detail": "no difference for inputs meeting the precondition with lists of length <= 4, loops <= 12 iterations and <= 12 nested calls",
+    "bound": 12,
+    "counterexample": null,
+    "outcome_a": null,
+    "outcome_b": null,
+    "predicted_a": null,
+    "predicted_b": null
+   },
+   "replay": {
+    "buggy": {
+     "kind": "value",
+     "repr": "'00010001'"
+    },
+    "correct": {
+     "kind": "value",
+     "repr": "'10001000'"
+    }
+   },
+   "outcome": "caught",
+   "reason": "input {'num': 136, 'b': 2}: buggy {'kind': 'value', 'repr': \"'00010001'\"} vs correct {'kind': 'value', 'repr': \"'10001000'\"}",
+   "seconds": 37.7
+  },
+  {
+   "name": "topological_ordering",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "graph Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "wrap",
+   "in_scope": false,
+   "outcome": "unsupported",
+   "reason": "method call .rfind()",
+   "seconds": 0.0
+  }
+ ]
+}

@@ -11,6 +11,7 @@ QuixBugs commit `4257f44b0ff1181dedaedee6a447e133219fcebf` (MIT licence, see `be
 | (a) + bounded loops | 1 | 0 | 0 | 39 |
 | (b) + inlined calls | 2 | 0 | 0 | 38 |
 | (c) + int lists / str | 22 | 0 | 0 | 18 |
+| (d) bounded equivalence | 20 | 0 | 0 | 20 |
 
 * **caught**: the buggy version is refuted with a concrete input, a real run of the buggy QuixBugs file on that input confirms it (wrong output, exception or timeout), and the correct version is proved up to the bound. Equivalence mode: the two files really behave differently on the reported input.
 * **false_alarm**: the correct version is refuted (equivalence mode: correct vs correct differs).
@@ -21,48 +22,48 @@ Spec-mode bound: K = 8 loop iterations, K = 8 nested calls, list/str inputs of l
 
 ## Per program
 
-| program | baseline | loops | calls | lists | cap | domain (spec mode) |
-|---|---|---|---|---|---|---|
-| `bitcount` | unsupported | caught | caught | caught | 8 | n <= 255 |
-| `breadth_first_search` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `bucketsort` | unsupported | unsupported | unsupported | caught | 4 | k <= 8 |
-| `depth_first_search` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `detect_cycle` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `find_first_in_sorted` | unsupported | unsupported | unsupported | caught | 8 | True |
-| `find_in_sorted` | unsupported | unsupported | unsupported | caught | 8 | True |
-| `flatten` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `gcd` | unsupported | unsupported | caught | caught | 8 | a <= 20 and b <= 20 |
-| `get_factors` | unsupported | unsupported | unsupported | caught | 8 | n <= 50 |
-| `hanoi` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `is_valid_parenthesization` | unsupported | unsupported | unsupported | caught | 8 | True |
-| `kheapsort` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `knapsack` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `kth` | unsupported | unsupported | unsupported | caught | 4 | True |
-| `lcs_length` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `levenshtein` | unsupported | unsupported | unsupported | caught | 4 | True |
-| `lis` | unsupported | unsupported | unsupported | caught | 4 | True |
-| `longest_common_subsequence` | unsupported | unsupported | unsupported | caught | 4 | True |
-| `max_sublist_sum` | unsupported | unsupported | unsupported | caught | 8 | True |
-| `mergesort` | unsupported | unsupported | unsupported | caught | 4 | True |
-| `minimum_spanning_tree` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `next_palindrome` | unsupported | unsupported | unsupported | caught | 3 | True |
-| `next_permutation` | unsupported | unsupported | unsupported | caught | 4 | True *(partial spec)* |
-| `pascal` | unsupported | unsupported | unsupported | caught | 8 | n <= 6 |
-| `possible_change` | unsupported | unsupported | unsupported | caught | 4 | total <= 4 |
-| `powerset` | unsupported | unsupported | unsupported | caught | 3 | True |
-| `quicksort` | unsupported | unsupported | unsupported | caught | 4 | True |
-| `reverse_linked_list` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `rpn_eval` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `shortest_path_length` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `shortest_path_lengths` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `shortest_paths` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `shunting_yard` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `sieve` | unsupported | unsupported | unsupported | caught | 8 | max <= 9 |
-| `sqrt` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `subsequences` | unsupported | unsupported | unsupported | caught | 8 | -1 <= b - a <= 3 and k <= 3 |
-| `to_base` | unsupported | unsupported | unsupported | caught | 8 | num <= 255 |
-| `topological_ordering` | unsupported | unsupported | unsupported | unsupported | 8 | True |
-| `wrap` | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| program | baseline | loops | calls | lists | equiv | cap | domain (spec mode) |
+|---|---|---|---|---|---|---|---|
+| `bitcount` | unsupported | caught | caught | caught | caught | 8 | n <= 255 |
+| `breadth_first_search` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `bucketsort` | unsupported | unsupported | unsupported | caught | caught | 4 | k <= 8 |
+| `depth_first_search` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `detect_cycle` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `find_first_in_sorted` | unsupported | unsupported | unsupported | caught | caught | 8 | True |
+| `find_in_sorted` | unsupported | unsupported | unsupported | caught | caught | 8 | True |
+| `flatten` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `gcd` | unsupported | unsupported | caught | caught | caught | 8 | a <= 20 and b <= 20 |
+| `get_factors` | unsupported | unsupported | unsupported | caught | caught | 8 | n <= 50 |
+| `hanoi` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `is_valid_parenthesization` | unsupported | unsupported | unsupported | caught | caught | 8 | True |
+| `kheapsort` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `knapsack` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `kth` | unsupported | unsupported | unsupported | caught | caught | 4 | True |
+| `lcs_length` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `levenshtein` | unsupported | unsupported | unsupported | caught | caught | 4 | True |
+| `lis` | unsupported | unsupported | unsupported | caught | caught | 4 | True |
+| `longest_common_subsequence` | unsupported | unsupported | unsupported | caught | caught | 4 | True |
+| `max_sublist_sum` | unsupported | unsupported | unsupported | caught | caught | 8 | True |
+| `mergesort` | unsupported | unsupported | unsupported | caught | caught | 4 | True |
+| `minimum_spanning_tree` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `next_palindrome` | unsupported | unsupported | unsupported | caught | caught | 3 | True |
+| `next_permutation` | unsupported | unsupported | unsupported | caught | caught | 4 | True *(partial spec)* |
+| `pascal` | unsupported | unsupported | unsupported | caught | caught | 8 | n <= 6 |
+| `possible_change` | unsupported | unsupported | unsupported | caught | caught | 4 | total <= 4 |
+| `powerset` | unsupported | unsupported | unsupported | caught | unsupported | 3 | True |
+| `quicksort` | unsupported | unsupported | unsupported | caught | unsupported | 4 | True |
+| `reverse_linked_list` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `rpn_eval` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `shortest_path_length` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `shortest_path_lengths` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `shortest_paths` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `shunting_yard` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `sieve` | unsupported | unsupported | unsupported | caught | caught | 8 | max <= 9 |
+| `sqrt` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `subsequences` | unsupported | unsupported | unsupported | caught | caught | 8 | -1 <= b - a <= 3 and k <= 3 |
+| `to_base` | unsupported | unsupported | unsupported | caught | caught | 8 | num <= 255 |
+| `topological_ordering` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
+| `wrap` | unsupported | unsupported | unsupported | unsupported | unsupported | 8 | True |
 
 ## Details: baseline: original `verify_function`
 
@@ -243,6 +244,51 @@ Spec-mode bound: K = 8 loop iterations, K = 8 nested calls, list/str inputs of l
 | `to_base` | caught | counterexample {'num': 54, 'b': 3} confirmed by a real run | 287.4 |
 | `topological_ordering` | unsupported | buggy: graph Node objects are not modeled | 0.0 |
 | `wrap` | unsupported | buggy: method call .rfind() | 0.0 |
+
+## Details: (d) bounded equivalence
+
+| program | outcome | reason | seconds |
+|---|---|---|---:|
+| `bitcount` | caught | input {'n': 3}: buggy {'kind': 'TIMEOUT'} vs correct {'kind': 'value', 'repr': '2'} | 9.4 |
+| `breadth_first_search` | unsupported | graph / linked-list Node objects are not modeled | 0.0 |
+| `bucketsort` | caught | input {'arr': [0, 1, 2, 2], 'k': 3}: buggy {'kind': 'value', 'repr': '[1, 2, 2, 3, 3]'} vs correct {'kind': 'value', 'repr': '[0, 1, 2, 2]'} | 0.7 |
+| `depth_first_search` | unsupported | graph / linked-list Node objects are not modeled | 0.0 |
+| `detect_cycle` | unsupported | graph / linked-list Node objects are not modeled | 0.0 |
+| `find_first_in_sorted` | caught | input {'arr': [7360, 7362], 'x': 7363}: buggy {'kind': 'IndexError'} vs correct {'kind': 'value', 'repr': '-1'} | 13.6 |
+| `find_in_sorted` | caught | input {'arr': [22774, 22776], 'x': 22775}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '-1'} | 14.4 |
+| `flatten` | unsupported | arbitrarily nested lists are not modeled | 0.0 |
+| `gcd` | caught | input {'a': 13, 'b': 14}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '1'} | 47.3 |
+| `get_factors` | caught | input {'n': 49}: buggy {'kind': 'value', 'repr': '[7]'} vs correct {'kind': 'value', 'repr': '[7, 7]'} | 54.1 |
+| `hanoi` | unsupported | only plain positional parameters are modeled (no defaults / *args) | 0.0 |
+| `is_valid_parenthesization` | caught | input {'parens': '()(('}: buggy {'kind': 'value', 'repr': 'True'} vs correct {'kind': 'value', 'repr': 'False'} | 0.2 |
+| `kheapsort` | unsupported | generator functions (yield) are not modeled | 0.1 |
+| `knapsack` | unsupported | lists of tuples are not modeled | 0.0 |
+| `kth` | caught | input {'arr': [-28941, -2, -1, -28940], 'k': 1}: buggy {'kind': 'value', 'repr': '-2'} vs correct {'kind': 'value', 'repr': '-28940'} | 7.0 |
+| `lcs_length` | unsupported | import inside a function body | 0.0 |
+| `levenshtein` | caught | input {'source': '! !', 'target': ' !'}: buggy {'kind': 'value', 'repr': '3'} vs correct {'kind': 'value', 'repr': '1'} | 153.1 |
+| `lis` | caught | input {'arr': [38023, 38021, 38022, -1]}: buggy {'kind': 'value', 'repr': '1'} vs correct {'kind': 'value', 'repr': '2'} | 8.7 |
+| `longest_common_subsequence` | caught | input {'a': '    ', 'b': ' '}: buggy {'kind': 'value', 'repr': "'    '"} vs correct {'kind': 'value', 'repr': "' '"} | 62.3 |
+| `max_sublist_sum` | caught | input {'arr': [-1, 1, -1, 2]}: buggy {'kind': 'value', 'repr': '1'} vs correct {'kind': 'value', 'repr': '2'} | 0.1 |
+| `mergesort` | caught | input {'arr': [32]}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '[32]'} | 89.8 |
+| `minimum_spanning_tree` | unsupported | dict arguments are not modeled | 0.0 |
+| `next_palindrome` | caught | input {'digit_list': [9]}: buggy {'kind': 'value', 'repr': '[1, 0, 1]'} vs correct {'kind': 'value', 'repr': '[1, 1]'} | 0.4 |
+| `next_permutation` | caught | input {'perm': [19944, 19943, 19945]}: buggy {'kind': 'value', 'repr': 'None'} vs correct {'kind': 'value', 'repr': '[19944, 19945, 19943]'} | 0.9 |
+| `pascal` | caught | input {'n': 3}: buggy {'kind': 'IndexError'} vs correct {'kind': 'value', 'repr': '[[1], [1, 1], [1, 2, 1]]'} | 0.8 |
+| `possible_change` | caught | input {'coins': [4, 1, 18841, 8855], 'total': 4}: buggy {'kind': 'ValueError'} vs correct {'kind': 'value', 'repr': '2'} | 4.9 |
+| `powerset` | unsupported | solver returned unknown | 241.5 |
+| `quicksort` | unsupported | solver returned unknown | 70.7 |
+| `reverse_linked_list` | unsupported | graph / linked-list Node objects are not modeled | 0.0 |
+| `rpn_eval` | unsupported | mixed float/str lists are not modeled | 0.0 |
+| `shortest_path_length` | unsupported | dict arguments are not modeled | 0.0 |
+| `shortest_path_lengths` | unsupported | dict arguments are not modeled | 0.0 |
+| `shortest_paths` | unsupported | dict arguments are not modeled | 0.0 |
+| `shunting_yard` | unsupported | mixed int/str lists are not modeled | 0.0 |
+| `sieve` | caught | input {'max': 2}: buggy {'kind': 'value', 'repr': '[]'} vs correct {'kind': 'value', 'repr': '[2]'} | 3.3 |
+| `sqrt` | unsupported | floats are not modeled | 0.0 |
+| `subsequences` | caught | input {'a': 0, 'b': 3, 'k': 1}: buggy {'kind': 'value', 'repr': '[]'} vs correct {'kind': 'value', 'repr': '[[0], [1], [2]]'} | 0.5 |
+| `to_base` | caught | input {'num': 136, 'b': 2}: buggy {'kind': 'value', 'repr': "'00010001'"} vs correct {'kind': 'value', 'repr': "'10001000'"} | 37.7 |
+| `topological_ordering` | unsupported | graph Node objects are not modeled | 0.0 |
+| `wrap` | unsupported | method call .rfind() | 0.0 |
 
 ## Specs
 
