@@ -1,0 +1,691 @@
+{
+ "step": "calls",
+ "quixbugs_commit": "4257f44b0ff1181dedaedee6a447e133219fcebf",
+ "options": {
+  "bound": 8,
+  "list_cap": 8,
+  "spec_bound": 64,
+  "loops": true,
+  "calls": true,
+  "lists": false,
+  "timeout_ms": 120000,
+  "feasibility_timeout_ms": 5000
+ },
+ "summary": {
+  "caught": 2,
+  "missed": 0,
+  "false_alarm": 0,
+  "unsupported": 38
+ },
+ "programs": [
+  {
+   "name": "bitcount",
+   "partial_spec": false,
+   "domain": "n <= 255",
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with bound",
+    "counterexample": {
+     "n": 214
+    },
+    "predicted_outcome": "bound",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "TIMEOUT"
+     }
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'n': 214} confirmed by a real run",
+   "seconds": 15.0
+  },
+  {
+   "name": "breadth_first_search",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "bucketsort",
+   "partial_spec": false,
+   "domain": "k <= 8",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "depth_first_search",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "detect_cycle",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "find_first_in_sorted",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "find_in_sorted",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "flatten",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "arbitrarily nested lists are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "arbitrarily nested lists are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: arbitrarily nested lists are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "gcd",
+   "partial_spec": false,
+   "domain": "a <= 20 and b <= 20",
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with bound",
+    "counterexample": {
+     "a": 20,
+     "b": 1
+    },
+    "predicted_outcome": "bound",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "RecursionError"
+     }
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'a': 20, 'b': 1} confirmed by a real run",
+   "seconds": 9.4
+  },
+  {
+   "name": "get_factors",
+   "partial_spec": false,
+   "domain": "n <= 50",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list literal needs extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list literal needs extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list literal needs extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "hanoi",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "only plain positional parameters are modeled (no defaults / *args)"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "only plain positional parameters are modeled (no defaults / *args)"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: only plain positional parameters are modeled (no defaults / *args)",
+   "seconds": 0.0
+  },
+  {
+   "name": "is_valid_parenthesization",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "kheapsort",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "knapsack",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "lists of tuples are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "lists of tuples are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: lists of tuples are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "kth",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "lcs_length",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "levenshtein",
+   "partial_spec": false,
+   "domain": "len(source) <= 3 and len(target) <= 3",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "lis",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "longest_common_subsequence",
+   "partial_spec": false,
+   "domain": "len(a) <= 3 and len(b) <= 3",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "max_sublist_sum",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "mergesort",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "minimum_spanning_tree",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "next_palindrome",
+   "partial_spec": false,
+   "domain": "len(digit_list) <= 3",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "next_permutation",
+   "partial_spec": true,
+   "domain": "len(perm) <= 4",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "pascal",
+   "partial_spec": false,
+   "domain": "n <= 6",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list literal needs extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list literal needs extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list literal needs extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "possible_change",
+   "partial_spec": false,
+   "domain": "len(coins) <= 3 and total <= 4",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "powerset",
+   "partial_spec": false,
+   "domain": "len(arr) <= 3",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "quicksort",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "reverse_linked_list",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "rpn_eval",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "mixed float/str lists are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "mixed float/str lists are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: mixed float/str lists are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_path_length",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_path_lengths",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_paths",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "shunting_yard",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "mixed int/str lists are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "mixed int/str lists are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: mixed int/str lists are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "sieve",
+   "partial_spec": false,
+   "domain": "max <= 9",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list literal needs extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list literal needs extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list literal needs extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "sqrt",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "floats are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "floats are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: floats are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "subsequences",
+   "partial_spec": false,
+   "domain": "-1 <= b - a <= 5 and k <= 4",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list literal needs extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list literal needs extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list literal needs extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "to_base",
+   "partial_spec": false,
+   "domain": "num <= 255",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "string constant needs extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "string constant needs extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: string constant needs extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  },
+  {
+   "name": "topological_ordering",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "graph Node objects are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "graph Node objects are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: graph Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "wrap",
+   "partial_spec": false,
+   "domain": "True",
+   "buggy": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "list/str arguments need extension (c) 'lists', not enabled at this step"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: list/str arguments need extension (c) 'lists', not enabled at this step",
+   "seconds": 0.0
+  }
+ ]
+}
