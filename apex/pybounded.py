@@ -34,7 +34,7 @@ from __future__ import annotations
 
 import ast
 import itertools
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Callable, Dict, List, Optional, Tuple
 
 import z3
@@ -136,6 +136,7 @@ class SymList:
     kind: Optional[str]           # 'int' | 'str' | 'list' | None (known empty)
     maxlen: Optional[int]         # static upper bound on the length, if known
     uids: frozenset = field(default_factory=_fresh)   # object identity, for aliasing
+    inner: Optional[int] = None   # kind 'list': static max length of the inner lists
 
 
 @dataclass(frozen=True)
@@ -198,11 +199,12 @@ def _const_int(v) -> Optional[int]:
     return v.as_long() if z3.is_int_value(v) else None
 
 
-def _const_list(terms, kind) -> SymList:
+def _const_list(terms, kind, inner=None) -> SymList:
     arr = z3.K(z3.IntSort(), _zero(kind))
     for i, t in enumerate(terms):
         arr = z3.Store(arr, i, t)
-    return SymList(arr, z3.IntVal(len(terms)), kind if terms or kind == "str" else None, len(terms))
+    return SymList(arr, z3.IntVal(len(terms)), kind if terms or kind == "str" else None, len(terms),
+                   inner=inner if terms else 0)
 
 
 def _str_const(s: str) -> SymList:
@@ -222,11 +224,19 @@ def _retype(lst: SymList, kind) -> SymList:
         return lst
     if lst.kind is not None:
         raise Unsupported(f"mixing list kinds '{lst.kind}' and '{kind}'")
-    return SymList(z3.K(z3.IntSort(), _zero(kind)), lst.length, kind, lst.maxlen, lst.uids)
+    return replace(lst, arr=z3.K(z3.IntSort(), _zero(kind)), kind=kind)
 
 
 def _maxlen_add(a, b):
     return None if a is None or b is None else a + b
+
+
+def _max_opt(a, b):
+    return None if a is None or b is None else max(a, b)
+
+
+def _inner_of(v):
+    return v.maxlen if isinstance(v, SymList) else None
 
 
 def _merge(c, a, b):
@@ -243,7 +253,8 @@ def _merge(c, a, b):
         kind = _unify_kind(a.kind, b.kind)
         a, b = _retype(a, kind), _retype(b, kind)
         maxlen = None if a.maxlen is None or b.maxlen is None else max(a.maxlen, b.maxlen)
-        return SymList(_ite(c, a.arr, b.arr), _ite(c, a.length, b.length), kind, maxlen, a.uids | b.uids)
+        return SymList(_ite(c, a.arr, b.arr), _ite(c, a.length, b.length), kind, maxlen, a.uids | b.uids,
+                       _max_opt(a.inner, b.inner))
     if isinstance(a, SymDict) and isinstance(b, SymDict):
         return SymDict(_ite(c, a.vals, b.vals), _ite(c, a.present, b.present), a.uids | b.uids)
     if isinstance(a, tuple) and isinstance(b, tuple) and len(a) == len(b):
@@ -551,7 +562,7 @@ class _Executor:
             return
         new = self._binop(s.op, old, rhs, p)
         if isinstance(t, ast.Name) and isinstance(old, SymList):
-            new = SymList(new.arr, new.length, new.kind, new.maxlen, old.uids)
+            new = replace(new, uids=old.uids)
         self._assign(t, new, p)
 
     def _s_Return(self, s, p):
@@ -708,12 +719,12 @@ class _Executor:
             if not isinstance(v, SymList):
                 raise Unsupported("slice assignment from a non-list")
             new = self._concat(self._concat(self._slice(base, None, lo), v), self._slice(base, hi, None))
-            p.env[name] = SymList(new.arr, new.length, new.kind, new.maxlen, base.uids)
+            p.env[name] = replace(new, uids=base.uids)
             return
         i = self._index(base, self._int(self._eval(target.slice, p)), p)
         kind, term = self._elem_term(v)
         base = _retype(base, _unify_kind(base.kind, kind))
-        p.env[name] = SymList(z3.Store(base.arr, i, term), base.length, base.kind, base.maxlen, base.uids)
+        p.env[name] = replace(base, arr=z3.Store(base.arr, i, term), inner=_max_opt(base.inner, _inner_of(v)))
 
     # -- expressions -------------------------------------------------------
 
@@ -753,12 +764,13 @@ class _Executor:
         vals = [self._eval(e, p) for e in node.elts]
         if any(v is BOTTOM for v in vals):
             return BOTTOM
-        kind, terms = None, []
+        kind, terms, inner = None, [], 0
         for v in vals:
             k, t = self._elem_term(v)
             kind = _unify_kind(kind, k)
             terms.append(t)
-        return _const_list(terms, kind)
+            inner = _max_opt(inner, _inner_of(v))
+        return _const_list(terms, kind, inner)
 
     def _e_Dict(self, node, p):
         self._need("lists", "dict literal")
@@ -1033,7 +1045,7 @@ class _Executor:
                 self._raise("IndexError", _and(p.alive, base.length <= 0), "pop from empty list")
                 last = base.length - 1
                 v = self._elem(base, last)
-                new = SymList(z3.Store(base.arr, last, _zero(base.kind)), last, base.kind, base.maxlen, base.uids)
+                new = replace(base, arr=z3.Store(base.arr, last, _zero(base.kind)), length=last)
                 p.env[name] = new
                 return v
             if len(node.args) != 1:
@@ -1044,14 +1056,14 @@ class _Executor:
                     return BOTTOM
                 kind, term = self._elem_term(v)
                 base = _retype(base, _unify_kind(base.kind, kind))
-                new = SymList(z3.Store(base.arr, base.length, term), base.length + 1, base.kind,
-                              _maxlen_add(base.maxlen, 1), base.uids)
+                new = replace(base, arr=z3.Store(base.arr, base.length, term), length=base.length + 1,
+                              maxlen=_maxlen_add(base.maxlen, 1), inner=_max_opt(base.inner, _inner_of(v)))
             else:
                 other = self._iterable_list(node.args[0], p)
                 if other is BOTTOM:
                     return BOTTOM
                 c = self._concat(base, other)
-                new = SymList(c.arr, c.length, c.kind, c.maxlen, base.uids)
+                new = replace(c, uids=base.uids)
             p.env[name] = new
             return NONE
         raise Unsupported(f"method call .{f.attr}()")
@@ -1110,7 +1122,7 @@ class _Executor:
             raise Unsupported("list() arity")
         v = self._iterable_list(node.args[0], p)
         if isinstance(v, SymList):
-            return SymList(v.arr, v.length, v.kind, v.maxlen)
+            return replace(v, uids=_fresh())
         return v
 
     def _b_reversed(self, node, p):
@@ -1264,8 +1276,9 @@ class _Executor:
         raise Unsupported(f"expected a list, got {type(v).__name__}")
 
     def _pairs_to_list(self, pairs) -> SymList:
-        kind, arr, length = None, None, _ZERO
+        kind, arr, length, inner = None, None, _ZERO, 0
         for g, v in pairs:
+            inner = _max_opt(inner, _inner_of(v))
             k, term = self._elem_term(v)
             kind = _unify_kind(kind, k)
             if arr is None:
@@ -1275,7 +1288,7 @@ class _Executor:
             length = z3.simplify(_ite(g, length + 1, length))
         if arr is None:
             return _const_list([], None)
-        return SymList(arr, length, kind, len(pairs))
+        return SymList(arr, length, kind, len(pairs), inner=inner)
 
     # -- list primitives ---------------------------------------------------
 
@@ -1308,7 +1321,7 @@ class _Executor:
             return e
         if lst.kind == "str":
             return SymList(z3.Store(_EMPTY_INTS, 0, e), _ONE, "str", 1)
-        return SymList(IntList.elems(e), IntList.size(e), "int", None, lst.uids)
+        return SymList(IntList.elems(e), IntList.size(e), "int", lst.inner, lst.uids)
 
     def _concat(self, a: SymList, b: SymList) -> SymList:
         if not isinstance(a, SymList) or not isinstance(b, SymList):
@@ -1318,17 +1331,18 @@ class _Executor:
         kind = _unify_kind(a.kind, b.kind)
         a, b = _retype(a, kind), _retype(b, kind)
         maxlen = _maxlen_add(a.maxlen, b.maxlen)
+        inner = _max_opt(a.inner, b.inner)
         if _const_int(a.length) == 0:
-            return SymList(b.arr, b.length, kind, b.maxlen)
+            return SymList(b.arr, b.length, kind, b.maxlen, inner=inner)
         nb = _const_int(b.length)
         if nb is not None and nb <= 4:
             arr = a.arr
             for t in range(nb):
                 arr = z3.Store(arr, a.length + t, z3.Select(b.arr, t))
-            return SymList(arr, z3.simplify(a.length + nb), kind, maxlen)
+            return SymList(arr, z3.simplify(a.length + nb), kind, maxlen, inner=inner)
         j = z3.Int("__j")
         arr = z3.Lambda([j], z3.If(j < a.length, z3.Select(a.arr, j), z3.Select(b.arr, j - a.length)))
-        return SymList(arr, a.length + b.length, kind, maxlen)
+        return SymList(arr, a.length + b.length, kind, maxlen, inner=inner)
 
     def _slice(self, lst: SymList, lo, hi) -> SymList:
         n = lst.length
@@ -1341,16 +1355,16 @@ class _Executor:
             return z3.If(v2 < 0, _ZERO, z3.If(v2 > n, n, v2))
         lo2, hi2 = clamp(lo, _ZERO), clamp(hi, n)
         if lo is None and hi is None:
-            return SymList(lst.arr, n, lst.kind, lst.maxlen)
+            return replace(lst, uids=_fresh())
         new_len = z3.If(hi2 > lo2, hi2 - lo2, _ZERO)
         j = z3.Int("__j")
         arr = z3.Lambda([j], z3.If(z3.And(j >= 0, j < new_len), z3.Select(lst.arr, j + lo2), _zero(lst.kind)))
-        return SymList(arr, new_len, lst.kind, lst.maxlen)
+        return SymList(arr, new_len, lst.kind, lst.maxlen, inner=lst.inner)
 
     def _reversed(self, lst: SymList) -> SymList:
         n, j = lst.length, z3.Int("__j")
         arr = z3.Lambda([j], z3.If(z3.And(j >= 0, j < n), z3.Select(lst.arr, n - 1 - j), _zero(lst.kind)))
-        return SymList(arr, n, lst.kind, lst.maxlen)
+        return SymList(arr, n, lst.kind, lst.maxlen, inner=lst.inner)
 
     def _repeat(self, lst: SymList, n) -> SymList:
         if _const_int(lst.length) != 1:
@@ -1359,7 +1373,7 @@ class _Executor:
         length = z3.If(n > 0, n, _ZERO)
         arr = z3.Lambda([j], z3.If(z3.And(j >= 0, j < length), v, _zero(lst.kind)))
         c = _const_int(n)
-        return SymList(arr, length, lst.kind, None if c is None else max(c, 0))
+        return SymList(arr, length, lst.kind, None if c is None else max(c, 0), inner=lst.inner)
 
     # -- coercions ---------------------------------------------------------
 

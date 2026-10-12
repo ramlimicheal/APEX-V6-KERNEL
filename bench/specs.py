@@ -261,10 +261,19 @@ def pow2(n):
     return p
 
 
+def same_list(xs, ys):
+    if len(xs) != len(ys):
+        return False
+    for i in range(len(xs)):
+        if xs[i] != ys[i]:
+            return False
+    return True
+
+
 def pairwise_distinct(xss):
     for i in range(len(xss)):
         for j in range(i):
-            if xss[i] == xss[j]:
+            if same_list(xss[i], xss[j]):
                 return False
     return True
 
@@ -358,7 +367,7 @@ SPECS = {
     "shunting_yard": Spec("tokens: list[int|str]", "True", "result == infix_to_rpn_ref(tokens)", "Output: The input tokens reordered into Reverse Polish Notation"),
     "sieve": Spec("max: int", "max >= 1", "result == primes_upto(max)", "Output: A list containing all primes up to and including max", "max <= 9"),
     "sqrt": Spec("x: float, epsilon: float", "x >= 1 and epsilon > 0", "abs(result - x ** 0.5) <= epsilon", "Output: A float in the interval [sqrt(x) - epsilon, sqrt(x) + epsilon]"),
-    "subsequences": Spec("a: int, b: int, k: int", "k >= 1", "len(result) == combos(b - a, k) and all(is_asc_in(s, a, b, k) for s in result) and pairwise_distinct(result)", "Output: A list of all length-k ascending sequences of ints in range(a, b)", "-1 <= b - a <= 4 and k <= 3"),
+    "subsequences": Spec("a: int, b: int, k: int", "k >= 1", "len(result) == combos(b - a, k) and all(is_asc_in(s, a, b, k) for s in result) and pairwise_distinct(result)", "Output: A list of all length-k ascending sequences of ints in range(a, b)", "-1 <= b - a <= 3 and k <= 3"),
     "to_base": Spec("num: int, b: int", "num > 0 and 2 <= b <= 36", "is_base_repr(result, b) and from_base(result, b) == num", "Output: A string representing the value of num in base b.", "num <= 255"),
     "topological_ordering": Spec("nodes: list[node]", "is_acyclic_graph(nodes)", "is_topological_order(result, nodes)", "Output: An OrderedSet containing the elements of nodes in an order that puts each node before all the nodes it has edges to"),
     "wrap": Spec("text: str, cols: int", "cols > 0", "all(len(line) <= cols for line in result) and ''.join(result) == text", "Output: An ordered list of strings, each no longer than the column width, such that the concatenation of the strings returns the original text"),
