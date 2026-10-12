@@ -38,7 +38,7 @@ ROOT = Path(__file__).resolve().parent
 QB = ROOT / "quixbugs"
 QUIXBUGS_SHA = "4257f44b0ff1181dedaedee6a447e133219fcebf"
 HELPERS = (ROOT / "specs.py").read_text()
-WALL_LIMIT_S = 900
+WALL_LIMIT_S = 1800
 
 STEP_OPTIONS = {
     "loops": BoundedOptions(loops=True, calls=False, lists=False),
