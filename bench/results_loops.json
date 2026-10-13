@@ -27,7 +27,7 @@
     "status": "refuted",
     "detail": "execution ends with bound",
     "counterexample": {
-     "n": 144
+     "n": 206
     },
     "predicted_outcome": "bound",
     "predicted": null,
@@ -46,8 +46,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'n': 144} confirmed by a real run",
-   "seconds": 24.8
+   "reason": "counterexample {'n': 206} confirmed by a real run",
+   "seconds": 22.1
   },
   {
    "name": "breadth_first_search",
@@ -697,7 +697,7 @@
   },
   {
    "name": "wrap",
-   "partial_spec": false,
+   "partial_spec": true,
    "domain": "True",
    "list_cap": 8,
    "buggy": {

@@ -674,7 +674,7 @@
   },
   {
    "name": "wrap",
-   "partial_spec": false,
+   "partial_spec": true,
    "domain": "True",
    "list_cap": 8,
    "buggy": {
