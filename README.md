@@ -1,92 +1,65 @@
-# APEX-REAL — A Working LLM Verification Pipeline
+# APEX Kernel
 
-**Author**: Ramli T. Michael
-**Status**: Working prototype (rebuilt from the original APEX-V6 concept)
-**License**: MIT
+**AI writes the code. APEX proves it, or shows exactly where it breaks.**
 
-A four-stage pipeline that wraps an LLM in external, deterministic checks so its
-output is verified instead of trusted. Every stage does real work and — this is
-the important part — **every stage can actually fail and halt the pipeline.**
+![How APEX works](docs/apex_how_it_works.png)
 
-> This is a rebuild. The original APEX-V6 layers were mocks (Layer 1 returned a
-> hardcoded `0.98`, Layer 2 string-matched `"UNSAT"`, Layer 3 slept and returned
-> `VERIFIED_SECURE`, Layer 4 returned constant JSON). Those have been replaced
-> with functioning implementations. See "Honesty / Scope" below.
+APEX is a verification layer for code written by AI models (or by people).
+You give it a function and the rule it must keep. APEX does not *trust* the
+answer. It checks it with a math solver (Z3), a security scan and an AI
+attacker. Any one of them can stop the pipeline.
 
-## What each layer really does
-- **Layer 1 — MCTS design search** (`apex/layer1_mcts.py`): a real Monte Carlo
-  Tree Search (selection via UCB1, LLM-driven expansion, LLM value scoring,
-  backpropagation) over design candidates, bounded by node / call / time budgets.
-- **Layer 2 — Z3 formal verification** (`apex/layer2_z3.py`): uses the real
-  `z3-solver`. An LLM emits SMT-LIB v2 for the *negation* of a safety property;
-  Z3 decides it. `unsat` → property proven safe; `sat` → returns a concrete
-  counterexample; malformed SMT is rejected.
-- **Layer 3 — static-analysis hive** (`apex/layer3_hive.py`): shards a target
-  directory and runs the real `bandit` analyzer per shard concurrently,
-  aggregating typed findings. Fails on high-severity findings or worker crashes.
-- **Layer 4 — adversarial gate** (`apex/layer4_gate.py`): a real LLM adversarial
-  review with **prompt-injection hardening** (payload quarantine + delimited
-  inert-data block) and fail-closed behavior on breach, malformed output, or
-  timeout.
-- **Orchestrator** (`apex/orchestrator.py`): runs `L1 → L2 → L3 → L4` in the
-  correct dependency order with per-layer metrics and a structured result.
+**Author:** Ramli T. Michael · THE AO · **License:** MIT
 
-## Advanced modes
-These are real techniques from formal-methods / synthesis research, not the
-original "Mirrorforge" fiction:
-- **Code-level verification** (`apex/pyverify.py`): symbolically executes a real
-  Python function (AST → Z3) and proves a postcondition for **all** integer
-  inputs, or returns concrete failing inputs. Fail-closed on any unsupported
-  construct (loops, calls, floats, …).
-  ```bash
-  python -m apex --verify-code examples/buggy_max.py \
-    --postcondition "result >= a and result >= b"
-  # -> REFUTED: counterexample {'a': -1, 'b': 0, 'result': -1}
-  ```
-- **CEGIS spec repair** (`apex/cegis.py`): when Z3 rejects an LLM-written spec,
-  the concrete counterexample (or parser error) is fed back and the model must
-  produce a repaired spec, bounded by a round limit. Enable with `--cegis`.
-- **Multi-adversary consensus** (Layer 4): run N adversaries at different
-  temperatures; **any** breach / malformed / timeout fails the gate. Enable with
-  `--adversaries N`.
-- **Validation-guided search** (Layer 1): the winning MCTS candidate must pass an
-  external validator (e.g. Z3); a rejected candidate gets negative feedback and
-  the next-best is tried. This ties the search to real verification, not just
-  the LLM's self-reported scores.
+---
 
-## Quickstart
+## Three answers, never a guess
+
+| APEX says | What it means |
+|---|---|
+| **PROVED** | No input in the stated range breaks the rule. |
+| **REFUTED** | Here is the exact input that breaks it. APEX re-runs the real code on it to confirm. |
+| **UNSUPPORTED** | APEX cannot model this code yet, and it says exactly why. It never quietly passes it. |
+
 ```bash
-pip install -r requirements.txt
-
-# 1) Self-contained offline demo (no API key). Should PASS:
-python -m apex --offline --demo
-
-# 2) Layer 2 in isolation — real Z3 proving and refuting deadlock-freedom:
-python -m examples.deadlock_check
-
-# 3) Real run against a directory (halts at Layer 3 on the vulnerable fixture):
-python -m apex --offline \
-  --spec "(declare-const x Int)(assert (> x 0))(assert (< x 0))(check-sat)" \
-  --target tests/fixtures/vulnerable
+python -m apex --verify-code examples/buggy_max.py \
+  --postcondition "result >= a and result >= b"
+# -> REFUTED: counterexample {'a': -1, 'b': 0, 'result': -1}
 ```
-For real LLM calls (Layers 1/2/4), copy `.env.example` to `.env`, add a
-`GEMINI_API_KEY`, and drop `--offline`.
+The function claimed to return the larger number. APEX found the input where
+it does not.
 
-## Tests
-```bash
-python -m pytest -q
-```
-The full suite runs **offline with zero API calls** via a deterministic mock
-LLM. It covers real proofs and refutations, real bandit findings, injection
-quarantine, and every layer's failure path.
+---
 
-## Benchmark: QuixBugs
-How much of a public bug benchmark can the Z3 verifier really catch? We ran
-it on all 40 Python programs of [QuixBugs](https://github.com/jkoppel/QuixBugs)
-(vendored under `bench/quixbugs/`, MIT, pinned commit `4257f44`). Each program
-has a buggy and a correct version. No LLM is involved and no API key is needed.
-Every number comes from `bench/results_*.json`, and `bench/REPORT.md` has the
-per-program table and the reason for every outcome.
+## How it works
+
+| # | Stage | What it does | File |
+|---|---|---|---|
+| 01 | **SEARCH** | Monte Carlo tree search over design options, scored by the model, bounded by node, call and time budgets. | `apex/layer1_mcts.py` |
+| 02 | **PROVE** | The model writes the *negation* of a safety property; Z3 decides it. `unsat` = proved, `sat` = concrete counterexample, malformed input = rejected. A rejected design goes back to SEARCH, and the next-best one is tried. | `apex/layer2_z3.py` |
+| 03 | **HIVE** | Splits the target into shards and runs the `bandit` security analyzer on each in parallel. Fails on high-severity findings or a crashed worker. | `apex/layer3_hive.py` |
+| 04 | **DESTROYER** | An isolated AI attacker reviews the result. The code it reviews is quarantined as inert data, so it cannot inject instructions. A breach, malformed output or timeout fails the gate. | `apex/layer4_gate.py` |
+
+`apex/orchestrator.py` runs 01 → 04 in order and returns a structured result
+with per-stage metrics.
+
+### Extra modes
+- **Prove real Python** (`apex/pyverify.py`, `apex/pybounded.py`): turns a
+  Python function into Z3 and proves a postcondition, or returns failing
+  inputs. Loops, calls, int lists and strings are handled up to a bound.
+- **Spec repair** (`--cegis`, `apex/cegis.py`): when Z3 rejects a spec the
+  model wrote, the counterexample is sent back and the model must repair it,
+  up to a round limit.
+- **Several attackers** (`--adversaries N`): N attackers at different
+  temperatures. Any one breach fails the gate.
+
+---
+
+## Proof: QuixBugs benchmark
+
+[QuixBugs](https://github.com/jkoppel/QuixBugs) is a public set of 40 small
+Python programs, each with a buggy and a correct version. No LLM is used and
+no API key is needed.
 
 | step | caught | missed | false_alarm | unsupported |
 |---|---:|---:|---:|---:|
@@ -98,97 +71,85 @@ per-program table and the reason for every outcome.
 | (d) bounded equivalence | 20 | 0 | 0 | 20 |
 <!-- /BENCH-TABLE -->
 
-* **caught** means: (1) the buggy version is refuted with a concrete input,
-  (2) **a real Python run of the buggy QuixBugs file on that input confirms it**
-  (wrong output against the spec, an exception, or a timeout), and (3) the
-  correct version is proved up to the bound. In equivalence mode it means that
-  real runs of both files behave differently on the reported input.
-* **unsupported** is never counted as caught. It always carries the exact
-  reason: graph Node objects, dicts, floats, generators, default arguments,
-  `str.rfind`, and so on.
-* **false_alarm** = the correct version was refuted. It is 0 at every step.
-  During development, two false alarms (to_base, next_permutation) and one
-  crash on lists of lists showed up. All three were engine bugs (an
-  incremental-solver model that did not satisfy its query, `a[i:] = ...`
-  slice assignment, a wrong array sort). They were fixed before the runs above,
-  and every `sat` model is now re-checked against the query before it is
-  trusted.
-* The baseline column is the **original** `verify_function`, unchanged. On 3
-  programs it does not fail closed: it crashes with a raw `Z3Exception`
-  (`not x` on an int). The report records this as a crash.
+- **caught** = the buggy version is refuted, a real run of the buggy file on
+  that input confirms the bug, and the correct version is proved up to the
+  bound.
+- **false_alarm** = the correct version was refuted. It is **0 at every step**.
+- **unsupported** is never counted as caught, and always lists the reason.
+- **(d) equivalence** needs no spec at all: it compares the buggy and correct
+  files and finds an input where they behave differently.
 
-**What "bounded" means.** `apex/pybounded.py` extends `pyverify` with
-(a) loops unrolled up to K = 8 iterations, (b) calls to functions in the same
-file inlined up to K = 8 nested calls, and (c) int lists and strings as Z3
-arrays with a symbolic length. Every unroll carries an *unwinding assertion*: an
-input that needs more than K iterations is reported, never silently dropped.
-So **"proved up to bound K"** means: for every input that meets the
-precondition, has lists no longer than the per-program cap (8, or 3–4 where
-symbolic lengths were too slow), has **strings made of printable ASCII only
-(codes 32–126)** and stays inside the listed int domain (e.g. `n <= 255` for
-bitcount), the function finishes within K and meets the postcondition. It is **not** a proof for larger inputs. Equivalence mode (d)
-compares the buggy and correct files directly, with K = 12 and lists of
-length 0..4. Its false-alarm check is each correct file against itself.
+Per-program results, the bound used for each one and every reason are in
+[`bench/REPORT.md`](bench/REPORT.md).
 
-**Known limits.**
-* **A wrong spec can still be "proved".** The postconditions in
-  `bench/specs.py` were written from the QuixBugs docstrings (one line each,
-  citing the docstring). If a spec is too weak, a bug passes. `next_permutation`
-  has an explicitly *partial* spec: "a permutation, lexicographically greater",
-  not "the next one". Specs written by an LLM have the same problem.
-* The specs were written knowing which programs are buggy, and the int domains
-  and list caps were chosen so the solver finishes. All of them are listed in
-  `bench/REPORT.md`.
-* 18 of 40 programs (graphs, dicts, floats, generators, tuples, string methods)
-  are outside the modeled subset in spec mode.
-
-Reproduce (about 40 min on 4 cores; `pip install -r requirements.txt` first):
 ```bash
-python -m bench.run --step baseline   # original verify_function
-python -m bench.run --step loops      # + (a)
-python -m bench.run --step calls      # + (b)
-python -m bench.run --step lists      # + (c)
-python -m bench.run --step equiv      # (d) bounded equivalence
-python -m bench.report                # rebuild bench/REPORT.md
+python -m bench.run --step baseline   # then: loops, calls, lists, equiv
+python -m bench.report                # rebuilds bench/REPORT.md (~40 min on 4 cores)
 ```
 
-## Honesty / Scope — please read
-This pipeline proves **specific, human-readable properties** and runs real
-static analysis and adversarial review. It does **not**:
-- make code "provably correct", "attack-proof", or "unhackable" in general;
-- replace human review of *which* properties matter.
+---
 
-The hard, unsolved part is the **specification problem**: Z3 can prove whatever
-spec it is given, but nothing guarantees the LLM-generated spec captures what you
-actually meant. A wrong spec can be "proven safe" while missing the real bug.
-Treat generated specs as drafts a human must review.
+## Quickstart
 
-Removed from the original project because they were fiction, not engineering:
-fabricated metrics (10⁶ node evals, 128 Kubernetes pods), and the "Layer 5 /
-Mirrorforge" universe-generation / self-evolution concept.
+```bash
+pip install -r requirements.txt
+
+python -m apex --offline --demo          # offline demo, no API key; should PASS
+python -m examples.deadlock_check        # Z3 proving and refuting deadlock-freedom
+
+python -m apex --offline \
+  --spec "(declare-const x Int)(assert (> x 0))(assert (< x 0))(check-sat)" \
+  --target tests/fixtures/vulnerable     # stops at HIVE on the vulnerable fixture
+```
+For live model calls (SEARCH, PROVE, DESTROYER), copy `.env.example` to
+`.env`, add `GEMINI_API_KEY`, and drop `--offline`.
+
+```bash
+python -m pytest -q   # full suite, offline, zero API calls (deterministic mock LLM)
+```
+
+---
+
+## What "proved" means, and what APEX does not do
+
+- **Proved up to a bound.** Loops are unrolled up to K rounds, and lists and
+  strings have a maximum length. String inputs are printable ASCII. An input
+  that needs more than K rounds is reported, never silently dropped. A proof
+  does not cover inputs larger than the bound.
+- **APEX proves the rule you give it.** If the rule is wrong or too weak, a
+  bug can still pass. A human should review *which* rules matter. That is the
+  hard part of all verification, and APEX makes it visible rather than hiding it.
+- APEX does not make code "unhackable" in general. It proves specific,
+  readable properties and runs real security checks.
+
+---
 
 ## Repository layout
+
 ```
 apex/
-  llm_client.py     shared LLM client + strict parsers + offline mock
-  layer1_mcts.py    real MCTS (+ validation-guided re-selection)
-  layer2_z3.py      real Z3 verification
-  layer3_hive.py    real bandit static-analysis hive
-  layer4_gate.py    real adversarial gate + injection hardening + consensus
-  pyverify.py       AST->Z3 verification of real Python functions
-  pybounded.py      bounded loops / calls / lists + bounded equivalence
-  cegis.py          counterexample-guided spec repair loop
   orchestrator.py   pipeline wiring, metrics, structured result
-  __main__.py       CLI entry (python -m apex)
-examples/
-  deadlock_check.py flagship Z3 demo
-  buggy_max.py      sample function with a real bug for --verify-code
-tests/              full offline test suite + fixtures
+  layer1_mcts.py    01 SEARCH: MCTS + validation-guided re-selection
+  layer2_z3.py      02 PROVE: Z3 verification
+  layer3_hive.py    03 HIVE: parallel bandit scan
+  layer4_gate.py    04 DESTROYER: adversarial gate, injection hardening, consensus
+  pyverify.py       Python function -> Z3
+  pybounded.py      bounded loops / calls / lists + bounded equivalence
+  cegis.py          counterexample-guided spec repair
+  llm_client.py     shared LLM client, strict parsers, offline mock
+  __main__.py       CLI (python -m apex)
 bench/              QuixBugs benchmark: specs, runner, results, REPORT.md
+examples/           deadlock_check.py, buggy_max.py
+tests/              offline test suite + fixtures
+docs/               images
 ```
+
+**History.** APEX began as the V6 design in `ARCHITECTURE.md` and
+`APEX_V6_FORMAL_KERNEL.md`. This repository is the working build of that
+design. Those two files describe the original vision, not the current code.
 
 ## Citation
 ```
-Ramli T. Michael. APEX-REAL: A Working LLM Verification Pipeline. 2026.
+Ramli T. Michael. APEX Kernel: AI writes the code, APEX proves it. THE AO, 2026.
 https://github.com/ramlimicheal/APEX-V6-KERNEL
 ```
