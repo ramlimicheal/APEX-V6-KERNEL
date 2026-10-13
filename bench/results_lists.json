@@ -27,7 +27,7 @@
     "status": "refuted",
     "detail": "execution ends with bound",
     "counterexample": {
-     "n": 144
+     "n": 206
     },
     "predicted_outcome": "bound",
     "predicted": null,
@@ -46,8 +46,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'n': 144} confirmed by a real run",
-   "seconds": 26.6
+   "reason": "counterexample {'n': 206} confirmed by a real run",
+   "seconds": 20.8
   },
   {
    "name": "breadth_first_search",
@@ -76,7 +76,6 @@
     "detail": "postcondition violated",
     "counterexample": {
      "arr": [
-      2,
       7
      ],
      "k": 8
@@ -85,19 +84,17 @@
     "predicted": [
      0,
      0,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1
+     0,
+     0,
+     0,
+     0,
+     0
     ],
     "replay": {
      "confirmed": true,
      "real": {
       "kind": "value",
-      "repr": "[0, 0, 1, 1, 1, 1, 1, 1, 1]"
+      "repr": "[0, 0, 0, 0, 0, 0, 0]"
      },
      "post_on_real_output": false
     }
@@ -110,8 +107,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'arr': [2, 7], 'k': 8} confirmed by a real run",
-   "seconds": 86.1
+   "reason": "counterexample {'arr': [7], 'k': 8} confirmed by a real run",
+   "seconds": 60.3
   },
   {
    "name": "depth_first_search",
@@ -154,22 +151,24 @@
    "list_cap": 8,
    "buggy": {
     "status": "refuted",
-    "detail": "execution ends with bound",
+    "detail": "execution ends with IndexError",
     "counterexample": {
      "arr": [
-      -4,
-      -3,
-      -1,
-      12007
+      -9864,
+      5464,
+      15577,
+      15577,
+      16760,
+      16760
      ],
-     "x": -2
+     "x": 16761
     },
-    "predicted_outcome": "bound",
+    "predicted_outcome": "IndexError",
     "predicted": null,
     "replay": {
      "confirmed": true,
      "real": {
-      "kind": "TIMEOUT"
+      "kind": "IndexError"
      }
     }
    },
@@ -181,8 +180,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'arr': [-4, -3, -1, 12007], 'x': -2} confirmed by a real run",
-   "seconds": 23.3
+   "reason": "counterexample {'arr': [-9864, 5464, 15577, 15577, 16760, 16760], 'x': 16761} confirmed by a real run",
+   "seconds": 15.8
   },
   {
    "name": "find_in_sorted",
@@ -194,14 +193,14 @@
     "detail": "execution ends with bound",
     "counterexample": {
      "arr": [
-      89333,
-      89334,
-      89334,
-      89335,
-      89337,
-      89337
+      67761,
+      81236,
+      81236,
+      81237,
+      81238,
+      81240
      ],
-     "x": 89336
+     "x": 81239
     },
     "predicted_outcome": "bound",
     "predicted": null,
@@ -220,8 +219,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'arr': [89333, 89334, 89334, 89335, 89337, 89337], 'x': 89336} confirmed by a real run",
-   "seconds": 9.1
+   "reason": "counterexample {'arr': [67761, 81236, 81236, 81237, 81238, 81240], 'x': 81239} confirmed by a real run",
+   "seconds": 11.2
   },
   {
    "name": "flatten",
@@ -270,7 +269,7 @@
    },
    "outcome": "caught",
    "reason": "counterexample {'a': 0, 'b': 1} confirmed by a real run",
-   "seconds": 90.2
+   "seconds": 66.0
   },
   {
    "name": "get_factors",
@@ -281,17 +280,20 @@
     "status": "refuted",
     "detail": "postcondition violated",
     "counterexample": {
-     "n": 25
+     "n": 48
     },
     "predicted_outcome": "value",
     "predicted": [
-     5
+     2,
+     2,
+     2,
+     2
     ],
     "replay": {
      "confirmed": true,
      "real": {
       "kind": "value",
-      "repr": "[5]"
+      "repr": "[2, 2, 2, 2]"
      },
      "post_on_real_output": false
     }
@@ -304,8 +306,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'n': 25} confirmed by a real run",
-   "seconds": 117.4
+   "reason": "counterexample {'n': 48} confirmed by a real run",
+   "seconds": 98.8
   },
   {
    "name": "hanoi",
@@ -333,7 +335,7 @@
     "status": "refuted",
     "detail": "postcondition violated",
     "counterexample": {
-     "parens": "(())(()("
+     "parens": "((()())("
     },
     "predicted_outcome": "value",
     "predicted": true,
@@ -354,8 +356,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'parens': '(())(()('} confirmed by a real run",
-   "seconds": 110.0
+   "reason": "counterexample {'parens': '((()())('} confirmed by a real run",
+   "seconds": 86.6
   },
   {
    "name": "kheapsort",
@@ -372,7 +374,7 @@
    },
    "outcome": "unsupported",
    "reason": "buggy: generator functions (yield) are not modeled",
-   "seconds": 0.4
+   "seconds": 0.3
   },
   {
    "name": "knapsack",
@@ -401,10 +403,10 @@
     "detail": "execution ends with IndexError",
     "counterexample": {
      "arr": [
-      32610,
-      32608,
-      32611,
-      32609
+      -4,
+      -3,
+      -2,
+      -1
      ],
      "k": 1
     },
@@ -425,8 +427,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'arr': [32610, 32608, 32611, 32609], 'k': 1} confirmed by a real run",
-   "seconds": 9.0
+   "reason": "counterexample {'arr': [-4, -3, -2, -1], 'k': 1} confirmed by a real run",
+   "seconds": 7.3
   },
   {
    "name": "lcs_length",
@@ -454,8 +456,8 @@
     "status": "refuted",
     "detail": "postcondition violated",
     "counterexample": {
-     "source": "\"!",
-     "target": "\" \"#"
+     "source": " !",
+     "target": "! \"!"
     },
     "predicted_outcome": "value",
     "predicted": 4,
@@ -476,8 +478,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'source': '\"!', 'target': '\" \"#'} confirmed by a real run",
-   "seconds": 110.8
+   "reason": "counterexample {'source': ' !', 'target': '! \"!'} confirmed by a real run",
+   "seconds": 127.5
   },
   {
    "name": "lis",
@@ -489,10 +491,10 @@
     "detail": "postcondition violated",
     "counterexample": {
      "arr": [
-      40772,
-      40773,
-      40771,
-      40774
+      -3,
+      -2,
+      -4,
+      -1
      ]
     },
     "predicted_outcome": "value",
@@ -514,8 +516,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'arr': [40772, 40773, 40771, 40774]} confirmed by a real run",
-   "seconds": 12.0
+   "reason": "counterexample {'arr': [-3, -2, -4, -1]} confirmed by a real run",
+   "seconds": 10.0
   },
   {
    "name": "longest_common_subsequence",
@@ -526,16 +528,16 @@
     "status": "refuted",
     "detail": "postcondition violated",
     "counterexample": {
-     "a": "#$  ",
-     "b": " !\"#"
+     "a": "\"# \"",
+     "b": "\"$!%"
     },
     "predicted_outcome": "value",
-    "predicted": "  ",
+    "predicted": "\"\"",
     "replay": {
      "confirmed": true,
      "real": {
       "kind": "value",
-      "repr": "'  '"
+      "repr": "'\"\"'"
      },
      "post_on_real_output": false
     }
@@ -548,8 +550,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'a': '#$  ', 'b': ' !\"#'} confirmed by a real run",
-   "seconds": 167.4
+   "reason": "counterexample {'a': '\"# \"', 'b': '\"$!%'} confirmed by a real run",
+   "seconds": 155.2
   },
   {
    "name": "max_sublist_sum",
@@ -561,22 +563,18 @@
     "detail": "postcondition violated",
     "counterexample": {
      "arr": [
-      -50210,
-      -50210,
-      117147,
-      1,
-      21527,
-      1,
-      28680
+      -2,
+      24391,
+      1
      ]
     },
     "predicted_outcome": "value",
-    "predicted": 66936,
+    "predicted": 24390,
     "replay": {
      "confirmed": true,
      "real": {
       "kind": "value",
-      "repr": "66936"
+      "repr": "24390"
      },
      "post_on_real_output": false
     }
@@ -589,8 +587,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'arr': [-50210, -50210, 117147, 1, 21527, 1, 28680]} confirmed by a real run",
-   "seconds": 20.5
+   "reason": "counterexample {'arr': [-2, 24391, 1]} confirmed by a real run",
+   "seconds": 16.3
   },
   {
    "name": "mergesort",
@@ -602,9 +600,6 @@
     "detail": "execution ends with bound",
     "counterexample": {
      "arr": [
-      0,
-      0,
-      0,
       0
      ]
     },
@@ -625,8 +620,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'arr': [0, 0, 0, 0]} confirmed by a real run",
-   "seconds": 94.2
+   "reason": "counterexample {'arr': [0]} confirmed by a real run",
+   "seconds": 85.4
   },
   {
    "name": "minimum_spanning_tree",
@@ -655,7 +650,6 @@
     "detail": "postcondition violated",
     "counterexample": {
      "digit_list": [
-      9,
       9
      ]
     },
@@ -663,14 +657,13 @@
     "predicted": [
      1,
      0,
-     0,
      1
     ],
     "replay": {
      "confirmed": true,
      "real": {
       "kind": "value",
-      "repr": "[1, 0, 0, 1]"
+      "repr": "[1, 0, 1]"
      },
      "post_on_real_output": false
     }
@@ -683,8 +676,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'digit_list': [9, 9]} confirmed by a real run",
-   "seconds": 620.2
+   "reason": "counterexample {'digit_list': [9]} confirmed by a real run",
+   "seconds": 441.2
   },
   {
    "name": "next_permutation",
@@ -696,9 +689,9 @@
     "detail": "execution ends with none",
     "counterexample": {
      "perm": [
-      1,
-      -2,
-      -1
+      26133,
+      28939,
+      26134
      ]
     },
     "predicted_outcome": "none",
@@ -720,8 +713,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'perm': [1, -2, -1]} confirmed by a real run",
-   "seconds": 27.0
+   "reason": "counterexample {'perm': [26133, 28939, 26134]} confirmed by a real run",
+   "seconds": 20.4
   },
   {
    "name": "pascal",
@@ -730,26 +723,17 @@
    "list_cap": 8,
    "buggy": {
     "status": "refuted",
-    "detail": "postcondition violated",
+    "detail": "execution ends with IndexError",
     "counterexample": {
-     "n": 2
+     "n": 3
     },
-    "predicted_outcome": "value",
-    "predicted": [
-     [
-      1
-     ],
-     [
-      1
-     ]
-    ],
+    "predicted_outcome": "IndexError",
+    "predicted": null,
     "replay": {
      "confirmed": true,
      "real": {
-      "kind": "value",
-      "repr": "[[1], [1]]"
-     },
-     "post_on_real_output": false
+      "kind": "IndexError"
+     }
     }
    },
    "correct": {
@@ -760,8 +744,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'n': 2} confirmed by a real run",
-   "seconds": 0.8
+   "reason": "counterexample {'n': 3} confirmed by a real run",
+   "seconds": 12.1
   },
   {
    "name": "possible_change",
@@ -772,9 +756,7 @@
     "status": "refuted",
     "detail": "execution ends with ValueError",
     "counterexample": {
-     "coins": [
-      2
-     ],
+     "coins": [],
      "total": 1
     },
     "predicted_outcome": "ValueError",
@@ -794,8 +776,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'coins': [2], 'total': 1} confirmed by a real run",
-   "seconds": 17.4
+   "reason": "counterexample {'coins': [], 'total': 1} confirmed by a real run",
+   "seconds": 17.8
   },
   {
    "name": "powerset",
@@ -809,7 +791,7 @@
      "arr": [
       1,
       0,
-      -1
+      2
      ]
     },
     "predicted_outcome": "value",
@@ -817,14 +799,14 @@
      [
       1,
       0,
-      -1
+      2
      ]
     ],
     "replay": {
      "confirmed": true,
      "real": {
       "kind": "value",
-      "repr": "[[1, 0, -1]]"
+      "repr": "[[1, 0, 2]]"
      },
      "post_on_real_output": false
     }
@@ -837,8 +819,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'arr': [1, 0, -1]} confirmed by a real run",
-   "seconds": 80.6
+   "reason": "counterexample {'arr': [1, 0, 2]} confirmed by a real run",
+   "seconds": 66.6
   },
   {
    "name": "quicksort",
@@ -850,23 +832,23 @@
     "detail": "postcondition violated",
     "counterexample": {
      "arr": [
-      30893,
-      -2,
       -1,
-      -2
+      24732,
+      24731,
+      24731
      ]
     },
     "predicted_outcome": "value",
     "predicted": [
-     -2,
      -1,
-     30893
+     24731,
+     24732
     ],
     "replay": {
      "confirmed": true,
      "real": {
       "kind": "value",
-      "repr": "[-2, -1, 30893]"
+      "repr": "[-1, 24731, 24732]"
      },
      "post_on_real_output": false
     }
@@ -879,8 +861,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'arr': [30893, -2, -1, -2]} confirmed by a real run",
-   "seconds": 77.9
+   "reason": "counterexample {'arr': [-1, 24732, 24731, 24731]} confirmed by a real run",
+   "seconds": 62.6
   },
   {
    "name": "reverse_linked_list",
@@ -1015,7 +997,7 @@
    },
    "outcome": "caught",
    "reason": "counterexample {'max': 2} confirmed by a real run",
-   "seconds": 9.9
+   "seconds": 10.6
   },
   {
    "name": "sqrt",
@@ -1067,7 +1049,7 @@
    },
    "outcome": "caught",
    "reason": "counterexample {'a': -3, 'b': 0, 'k': 1} confirmed by a real run",
-   "seconds": 8.1
+   "seconds": 7.8
   },
   {
    "name": "to_base",
@@ -1078,16 +1060,16 @@
     "status": "refuted",
     "detail": "postcondition violated",
     "counterexample": {
-     "num": 54,
-     "b": 3
+     "num": 96,
+     "b": 16
     },
     "predicted_outcome": "value",
-    "predicted": "0002",
+    "predicted": "06",
     "replay": {
      "confirmed": true,
      "real": {
       "kind": "value",
-      "repr": "'0002'"
+      "repr": "'06'"
      },
      "post_on_real_output": false
     }
@@ -1100,8 +1082,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'num': 54, 'b': 3} confirmed by a real run",
-   "seconds": 287.4
+   "reason": "counterexample {'num': 96, 'b': 16} confirmed by a real run",
+   "seconds": 264.6
   },
   {
    "name": "topological_ordering",
@@ -1122,7 +1104,7 @@
   },
   {
    "name": "wrap",
-   "partial_spec": false,
+   "partial_spec": true,
    "domain": "True",
    "list_cap": 8,
    "buggy": {
