@@ -54,7 +54,7 @@
    },
    "outcome": "caught",
    "reason": "input {'n': 3}: buggy {'kind': 'TIMEOUT'} vs correct {'kind': 'value', 'repr': '2'}",
-   "seconds": 9.4
+   "seconds": 8.8
   },
   {
    "name": "breadth_first_search",
@@ -72,27 +72,22 @@
     "bound": 12,
     "counterexample": {
      "arr": [
-      0,
-      1,
-      2,
-      2
+      6
      ],
-     "k": 3
+     "k": 8
     },
     "outcome_a": "value",
     "outcome_b": "value",
     "predicted_a": [
-     1,
-     2,
-     2,
-     3,
-     3
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
     ],
     "predicted_b": [
-     0,
-     1,
-     2,
-     2
+     6
     ]
    },
    "correct_vs_correct": {
@@ -108,16 +103,16 @@
    "replay": {
     "buggy": {
      "kind": "value",
-     "repr": "[1, 2, 2, 3, 3]"
+     "repr": "[0, 0, 0, 0, 0, 0]"
     },
     "correct": {
      "kind": "value",
-     "repr": "[0, 1, 2, 2]"
+     "repr": "[6]"
     }
    },
    "outcome": "caught",
-   "reason": "input {'arr': [0, 1, 2, 2], 'k': 3}: buggy {'kind': 'value', 'repr': '[1, 2, 2, 3, 3]'} vs correct {'kind': 'value', 'repr': '[0, 1, 2, 2]'}",
-   "seconds": 0.7
+   "reason": "input {'arr': [6], 'k': 8}: buggy {'kind': 'value', 'repr': '[0, 0, 0, 0, 0, 0]'} vs correct {'kind': 'value', 'repr': '[6]'}",
+   "seconds": 0.6
   },
   {
    "name": "depth_first_search",
@@ -173,7 +168,7 @@
    },
    "outcome": "caught",
    "reason": "input {'arr': [7360, 7362], 'x': 7363}: buggy {'kind': 'IndexError'} vs correct {'kind': 'value', 'repr': '-1'}",
-   "seconds": 13.6
+   "seconds": 11.6
   },
   {
    "name": "find_in_sorted",
@@ -184,10 +179,9 @@
     "bound": 12,
     "counterexample": {
      "arr": [
-      22774,
-      22776
+      -2
      ],
-     "x": 22775
+     "x": -1
     },
     "outcome_a": "bound",
     "outcome_b": "value",
@@ -214,7 +208,7 @@
     }
    },
    "outcome": "caught",
-   "reason": "input {'arr': [22774, 22776], 'x': 22775}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '-1'}",
+   "reason": "input {'arr': [-2], 'x': -1}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '-1'}",
    "seconds": 14.4
   },
   {
@@ -232,8 +226,8 @@
     "detail": "implementations disagree",
     "bound": 12,
     "counterexample": {
-     "a": 13,
-     "b": 14
+     "a": 20,
+     "b": 13
     },
     "outcome_a": "bound",
     "outcome_b": "value",
@@ -260,8 +254,8 @@
     }
    },
    "outcome": "caught",
-   "reason": "input {'a': 13, 'b': 14}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '1'}",
-   "seconds": 47.3
+   "reason": "input {'a': 20, 'b': 13}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '1'}",
+   "seconds": 39.6
   },
   {
    "name": "get_factors",
@@ -305,7 +299,7 @@
    },
    "outcome": "caught",
    "reason": "input {'n': 49}: buggy {'kind': 'value', 'repr': '[7]'} vs correct {'kind': 'value', 'repr': '[7, 7]'}",
-   "seconds": 54.1
+   "seconds": 40.3
   },
   {
    "name": "hanoi",
@@ -322,7 +316,7 @@
     "detail": "implementations disagree",
     "bound": 12,
     "counterexample": {
-     "parens": "()(("
+     "parens": "((("
     },
     "outcome_a": "value",
     "outcome_b": "value",
@@ -350,8 +344,8 @@
     }
    },
    "outcome": "caught",
-   "reason": "input {'parens': '()(('}: buggy {'kind': 'value', 'repr': 'True'} vs correct {'kind': 'value', 'repr': 'False'}",
-   "seconds": 0.2
+   "reason": "input {'parens': '((('}: buggy {'kind': 'value', 'repr': 'True'} vs correct {'kind': 'value', 'repr': 'False'}",
+   "seconds": 0.3
   },
   {
    "name": "kheapsort",
@@ -410,7 +404,7 @@
    },
    "outcome": "caught",
    "reason": "input {'arr': [-28941, -2, -1, -28940], 'k': 1}: buggy {'kind': 'value', 'repr': '-2'} vs correct {'kind': 'value', 'repr': '-28940'}",
-   "seconds": 7.0
+   "seconds": 6.0
   },
   {
    "name": "lcs_length",
@@ -457,7 +451,7 @@
    },
    "outcome": "caught",
    "reason": "input {'source': '! !', 'target': ' !'}: buggy {'kind': 'value', 'repr': '3'} vs correct {'kind': 'value', 'repr': '1'}",
-   "seconds": 153.1
+   "seconds": 133.8
   },
   {
    "name": "lis",
@@ -468,16 +462,16 @@
     "bound": 12,
     "counterexample": {
      "arr": [
-      38023,
-      38021,
-      38022,
-      -1
+      -2,
+      -1,
+      -3,
+      0
      ]
     },
     "outcome_a": "value",
     "outcome_b": "value",
-    "predicted_a": 1,
-    "predicted_b": 2
+    "predicted_a": 2,
+    "predicted_b": 3
    },
    "correct_vs_correct": {
     "status": "equivalent_up_to_bound",
@@ -492,16 +486,16 @@
    "replay": {
     "buggy": {
      "kind": "value",
-     "repr": "1"
+     "repr": "2"
     },
     "correct": {
      "kind": "value",
-     "repr": "2"
+     "repr": "3"
     }
    },
    "outcome": "caught",
-   "reason": "input {'arr': [38023, 38021, 38022, -1]}: buggy {'kind': 'value', 'repr': '1'} vs correct {'kind': 'value', 'repr': '2'}",
-   "seconds": 8.7
+   "reason": "input {'arr': [-2, -1, -3, 0]}: buggy {'kind': 'value', 'repr': '2'} vs correct {'kind': 'value', 'repr': '3'}",
+   "seconds": 6.9
   },
   {
    "name": "longest_common_subsequence",
@@ -541,7 +535,7 @@
    },
    "outcome": "caught",
    "reason": "input {'a': '    ', 'b': ' '}: buggy {'kind': 'value', 'repr': \"'    '\"} vs correct {'kind': 'value', 'repr': \"' '\"}",
-   "seconds": 62.3
+   "seconds": 52.8
   },
   {
    "name": "max_sublist_sum",
@@ -596,14 +590,18 @@
     "bound": 12,
     "counterexample": {
      "arr": [
-      32
+      6246,
+      6245,
+      -24189
      ]
     },
     "outcome_a": "bound",
     "outcome_b": "value",
     "predicted_a": null,
     "predicted_b": [
-     32
+     -24189,
+     6245,
+     6246
     ]
    },
    "correct_vs_correct": {
@@ -622,12 +620,12 @@
     },
     "correct": {
      "kind": "value",
-     "repr": "[32]"
+     "repr": "[-24189, 6245, 6246]"
     }
    },
    "outcome": "caught",
-   "reason": "input {'arr': [32]}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '[32]'}",
-   "seconds": 89.8
+   "reason": "input {'arr': [6246, 6245, -24189]}: buggy {'kind': 'RecursionError'} vs correct {'kind': 'value', 'repr': '[-24189, 6245, 6246]'}",
+   "seconds": 79.1
   },
   {
    "name": "minimum_spanning_tree",
@@ -682,7 +680,7 @@
    },
    "outcome": "caught",
    "reason": "input {'digit_list': [9]}: buggy {'kind': 'value', 'repr': '[1, 0, 1]'} vs correct {'kind': 'value', 'repr': '[1, 1]'}",
-   "seconds": 0.4
+   "seconds": 0.3
   },
   {
    "name": "next_permutation",
@@ -693,18 +691,18 @@
     "bound": 12,
     "counterexample": {
      "perm": [
-      19944,
-      19943,
-      19945
+      -4683,
+      -4684,
+      1
      ]
     },
     "outcome_a": "none",
     "outcome_b": "value",
     "predicted_a": null,
     "predicted_b": [
-     19944,
-     19945,
-     19943
+     -4683,
+     1,
+     -4684
     ]
    },
    "correct_vs_correct": {
@@ -724,12 +722,12 @@
     },
     "correct": {
      "kind": "value",
-     "repr": "[19944, 19945, 19943]"
+     "repr": "[-4683, 1, -4684]"
     }
    },
    "outcome": "caught",
-   "reason": "input {'perm': [19944, 19943, 19945]}: buggy {'kind': 'value', 'repr': 'None'} vs correct {'kind': 'value', 'repr': '[19944, 19945, 19943]'}",
-   "seconds": 0.9
+   "reason": "input {'perm': [-4683, -4684, 1]}: buggy {'kind': 'value', 'repr': 'None'} vs correct {'kind': 'value', 'repr': '[-4683, 1, -4684]'}",
+   "seconds": 0.5
   },
   {
    "name": "pascal",
@@ -780,7 +778,7 @@
    },
    "outcome": "caught",
    "reason": "input {'n': 3}: buggy {'kind': 'IndexError'} vs correct {'kind': 'value', 'repr': '[[1], [1, 1], [1, 2, 1]]'}",
-   "seconds": 0.8
+   "seconds": 0.4
   },
   {
    "name": "possible_change",
@@ -791,17 +789,17 @@
     "bound": 12,
     "counterexample": {
      "coins": [
+      20534,
       4,
-      1,
-      18841,
-      8855
+      23637,
+      5
      ],
      "total": 4
     },
     "outcome_a": "ValueError",
     "outcome_b": "value",
     "predicted_a": null,
-    "predicted_b": 2
+    "predicted_b": 1
    },
    "correct_vs_correct": {
     "status": "equivalent_up_to_bound",
@@ -819,12 +817,12 @@
     },
     "correct": {
      "kind": "value",
-     "repr": "2"
+     "repr": "1"
     }
    },
    "outcome": "caught",
-   "reason": "input {'coins': [4, 1, 18841, 8855], 'total': 4}: buggy {'kind': 'ValueError'} vs correct {'kind': 'value', 'repr': '2'}",
-   "seconds": 4.9
+   "reason": "input {'coins': [20534, 4, 23637, 5], 'total': 4}: buggy {'kind': 'ValueError'} vs correct {'kind': 'value', 'repr': '1'}",
+   "seconds": 4.5
   },
   {
    "name": "powerset",
@@ -851,7 +849,7 @@
    },
    "outcome": "unsupported",
    "reason": "solver returned unknown",
-   "seconds": 241.5
+   "seconds": 241.6
   },
   {
    "name": "quicksort",
@@ -878,7 +876,7 @@
    },
    "outcome": "unsupported",
    "reason": "solver returned unknown",
-   "seconds": 70.7
+   "seconds": 58.3
   },
   {
    "name": "reverse_linked_list",
@@ -930,13 +928,15 @@
     "detail": "implementations disagree",
     "bound": 12,
     "counterexample": {
-     "max": 2
+     "max": 5
     },
     "outcome_a": "value",
     "outcome_b": "value",
     "predicted_a": [],
     "predicted_b": [
-     2
+     2,
+     3,
+     5
     ]
    },
    "correct_vs_correct": {
@@ -956,12 +956,12 @@
     },
     "correct": {
      "kind": "value",
-     "repr": "[2]"
+     "repr": "[2, 3, 5]"
     }
    },
    "outcome": "caught",
-   "reason": "input {'max': 2}: buggy {'kind': 'value', 'repr': '[]'} vs correct {'kind': 'value', 'repr': '[2]'}",
-   "seconds": 3.3
+   "reason": "input {'max': 5}: buggy {'kind': 'value', 'repr': '[]'} vs correct {'kind': 'value', 'repr': '[2, 3, 5]'}",
+   "seconds": 10.8
   },
   {
    "name": "sqrt",
@@ -1059,7 +1059,7 @@
    },
    "outcome": "caught",
    "reason": "input {'num': 136, 'b': 2}: buggy {'kind': 'value', 'repr': \"'00010001'\"} vs correct {'kind': 'value', 'repr': \"'10001000'\"}",
-   "seconds": 37.7
+   "seconds": 31.7
   },
   {
    "name": "topological_ordering",

@@ -113,9 +113,9 @@ python -m pytest -q   # full suite, offline, zero API calls (deterministic mock 
 ## What "proved" means, and what APEX does not do
 
 - **Proved up to a bound.** Loops are unrolled up to K rounds, and lists and
-  strings have a maximum length. String inputs are printable ASCII. An input
-  that needs more than K rounds is reported, never silently dropped. A proof
-  does not cover inputs larger than the bound.
+  strings have a maximum length. String inputs are printable ASCII (character
+  codes 32–126). An input that needs more than K rounds is reported, never
+  silently dropped. A proof does not cover inputs larger than the bound.
 - **APEX proves the rule you give it.** If the rule is wrong or too weak, a
   bug can still pass. A human should review *which* rules matter. That is the
   hard part of all verification, and APEX makes it visible rather than hiding it.
