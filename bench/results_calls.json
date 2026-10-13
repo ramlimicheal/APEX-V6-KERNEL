@@ -27,7 +27,7 @@
     "status": "refuted",
     "detail": "execution ends with bound",
     "counterexample": {
-     "n": 144
+     "n": 206
     },
     "predicted_outcome": "bound",
     "predicted": null,
@@ -46,8 +46,8 @@
     "predicted": null
    },
    "outcome": "caught",
-   "reason": "counterexample {'n': 144} confirmed by a real run",
-   "seconds": 25.1
+   "reason": "counterexample {'n': 206} confirmed by a real run",
+   "seconds": 21.2
   },
   {
    "name": "breadth_first_search",
@@ -198,7 +198,7 @@
    },
    "outcome": "caught",
    "reason": "counterexample {'a': 0, 'b': 1} confirmed by a real run",
-   "seconds": 87.0
+   "seconds": 70.4
   },
   {
    "name": "get_factors",
@@ -712,7 +712,7 @@
   },
   {
    "name": "wrap",
-   "partial_spec": false,
+   "partial_spec": true,
    "domain": "True",
    "list_cap": 8,
    "buggy": {
