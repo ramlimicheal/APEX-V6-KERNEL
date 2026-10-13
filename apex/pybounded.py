@@ -60,7 +60,7 @@ _EMPTY_INTLIST = IntList.mk(_EMPTY_INTS, _ZERO)
 CODES = {
     "value": 0, "none": 1, "bound": 2, "model_limit": 3,
     "IndexError": 10, "KeyError": 11, "ZeroDivisionError": 12,
-    "ValueError": 13, "TypeError": 14,
+    "ValueError": 13, "TypeError": 14, "UnboundLocalError": 15,
 }
 CODE_NAMES = {v: k for k, v in CODES.items()}
 _STRING_MODULE = {
@@ -137,6 +137,7 @@ class SymList:
     maxlen: Optional[int]         # static upper bound on the length, if known
     uids: frozenset = field(default_factory=_fresh)   # object identity, for aliasing
     inner: Optional[int] = None   # kind 'list': static max length of the inner lists
+    inner_uids: frozenset = frozenset()   # kind 'list': identities of the inner lists
 
 
 @dataclass(frozen=True)
@@ -144,6 +145,13 @@ class SymDict:
     vals: z3.ArrayRef
     present: z3.ArrayRef
     uids: frozenset = field(default_factory=_fresh)
+
+
+@dataclass(frozen=True)
+class _Partial:
+    """A variable bound on some paths only: reading it where `unbound` holds raises."""
+    value: object
+    unbound: z3.BoolRef
 
 
 @dataclass(frozen=True)
@@ -199,12 +207,12 @@ def _const_int(v) -> Optional[int]:
     return v.as_long() if z3.is_int_value(v) else None
 
 
-def _const_list(terms, kind, inner=None) -> SymList:
+def _const_list(terms, kind, inner=None, inner_uids=frozenset()) -> SymList:
     arr = z3.K(z3.IntSort(), _zero(kind))
     for i, t in enumerate(terms):
         arr = z3.Store(arr, i, t)
     return SymList(arr, z3.IntVal(len(terms)), kind if terms or kind == "str" else None, len(terms),
-                   inner=inner if terms else 0)
+                   inner=inner if terms else 0, inner_uids=inner_uids)
 
 
 def _str_const(s: str) -> SymList:
@@ -239,6 +247,11 @@ def _inner_of(v):
     return v.maxlen if isinstance(v, SymList) else None
 
 
+def _uids_of(v) -> frozenset:
+    """Identity of a value stored into a list: a list element keeps its own identity."""
+    return v.uids if isinstance(v, SymList) else frozenset()
+
+
 def _merge(c, a, b):
     """Python value `a if c else b`; BOTTOM marks a dead side."""
     if a is BOTTOM:
@@ -254,7 +267,7 @@ def _merge(c, a, b):
         a, b = _retype(a, kind), _retype(b, kind)
         maxlen = None if a.maxlen is None or b.maxlen is None else max(a.maxlen, b.maxlen)
         return SymList(_ite(c, a.arr, b.arr), _ite(c, a.length, b.length), kind, maxlen, a.uids | b.uids,
-                       _max_opt(a.inner, b.inner))
+                       _max_opt(a.inner, b.inner), a.inner_uids | b.inner_uids)
     if isinstance(a, SymDict) and isinstance(b, SymDict):
         return SymDict(_ite(c, a.vals, b.vals), _ite(c, a.present, b.present), a.uids | b.uids)
     if isinstance(a, tuple) and isinstance(b, tuple) and len(a) == len(b):
@@ -273,25 +286,68 @@ def _join(parts):
         return (parts[0][1] if parts else {}), FALSE
     env = {}
     for name in set().union(*(e.keys() for _, e in live)):
-        vals = [(g, e[name]) for g, e in live if name in e]
-        v = vals[-1][1]
-        for g, x in reversed(vals[:-1]):
-            v = _merge(g, x, v)
-        env[name] = v
+        vals, unbound = [], []
+        for g, e in live:
+            x = e[name] if name in e else _Partial(BOTTOM, TRUE)
+            if isinstance(x, _Partial):
+                unbound.append(_and(g, x.unbound))
+                x = x.value
+            if x is not BOTTOM:
+                vals.append((g, x))
+        v = BOTTOM
+        if vals:
+            v = vals[-1][1]
+            for g, x in reversed(vals[:-1]):
+                v = _merge(g, x, v)
+        env[name] = _Partial(v, _or(*unbound)) if unbound else v
     return env, _or(*[g for g, _ in live])
 
 
 def _holds(v, uids) -> bool:
-    if isinstance(v, (SymList, SymDict)):
+    if isinstance(v, _Partial):
+        return _holds(v.value, uids)
+    if isinstance(v, SymList):
+        return bool((v.uids | v.inner_uids) & uids)
+    if isinstance(v, SymDict):
         return bool(v.uids & uids)
     if isinstance(v, tuple):
         return any(_holds(x, uids) for x in v)
     return False
 
 
+def _own_nodes(fn: ast.FunctionDef):
+    """Nodes in fn's body, not descending into nested function definitions."""
+    todo = list(fn.body)
+    while todo:
+        n = todo.pop()
+        yield n
+        if not isinstance(n, (ast.FunctionDef, ast.Lambda)):
+            todo.extend(ast.iter_child_nodes(n))
+
+
+def _changed_names(fn: ast.FunctionDef) -> set:
+    """Names fn rebinds or mutates in place (x = ..., x += ..., x[i] = ..., x.append(...))."""
+    out = set()
+    for n in _own_nodes(fn):
+        if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store):
+            out.add(n.id)
+        elif isinstance(n, ast.Subscript) and isinstance(n.ctx, ast.Store) and isinstance(n.value, ast.Name):
+            out.add(n.value.id)
+        elif isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and isinstance(n.func.value, ast.Name):
+            out.add(n.func.value.id)
+    return out
+
+
+def _free_names(fn: ast.FunctionDef) -> set:
+    params = {a.arg for a in fn.args.args}
+    loaded = {n.id for n in ast.walk(fn) if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)}
+    return loaded - params - _changed_names(fn)
+
+
 class _Frame:
-    def __init__(self, closure: Optional[dict]):
+    def __init__(self, closure: Optional[dict], node: Optional[ast.FunctionDef] = None):
         self.closure = closure
+        self.node = node
         self.returns: List[Tuple[z3.BoolRef, object]] = []
         self.loops: List[dict] = []
 
@@ -299,14 +355,15 @@ class _Frame:
 class _Path:
     """The state of all executions that reach a program point: env + guard."""
 
-    def __init__(self, frame: _Frame, env: dict, alive):
+    def __init__(self, frame: _Frame, env: dict, alive, readonly: bool = False):
         self.frame, self.env, self.alive = frame, env, alive
+        self.readonly = readonly   # a guarded operand or comprehension: effects would be lost
 
     def fork(self, alive) -> "_Path":
-        return _Path(self.frame, dict(self.env), alive)
+        return _Path(self.frame, dict(self.env), alive, self.readonly)
 
     def view(self, alive) -> "_Path":
-        return _Path(self.frame, self.env, alive)
+        return _Path(self.frame, self.env, alive, readonly=True)
 
 
 @dataclass
@@ -328,7 +385,8 @@ def load_globals(source: str, functions_only: bool = False) -> dict:
     env: dict = {}
     for node in module.body:
         if isinstance(node, ast.FunctionDef):
-            env[node.name] = _FuncRef(node, None)
+            env[node.name] = _Opaque(f"decorated function '{node.name}'") if node.decorator_list \
+                else _FuncRef(node, None)
         elif functions_only:
             continue
         elif isinstance(node, ast.Import):
@@ -428,6 +486,9 @@ class _Executor:
                 v = scope[name]
                 if isinstance(v, _Opaque):
                     raise Unsupported(v.reason)
+                if isinstance(v, _Partial):
+                    self._raise("UnboundLocalError", _and(p.alive, v.unbound), f"'{name}' unbound")
+                    v = v.value
                 return v
         raise Unsupported(f"unknown name: {name}")
 
@@ -438,11 +499,13 @@ class _Executor:
 
     def run(self, fn_name: str, args: list) -> _Outcome:
         fn = self.globals.get(fn_name)
+        if isinstance(fn, _Opaque):
+            raise Unsupported(fn.reason)
         if not isinstance(fn, _FuncRef):
             raise Unsupported(f"function '{fn_name}' not found")
         if any(isinstance(n, (ast.Yield, ast.YieldFrom)) for n in ast.walk(fn.node)):
             raise Unsupported("generator functions (yield) are not modeled")
-        frame = _Frame(None)
+        frame = _Frame(None, fn.node)
         returns = self._invoke(fn, args, TRUE, frame)
         nones = [g for g, v in returns if v is NONE]
         real = [(g, v) for g, v in returns if v is not NONE]
@@ -488,14 +551,14 @@ class _Executor:
 
     def _call_user(self, fn: _FuncRef, args: list, p: _Path):
         self._need("calls", f"call to {fn.node.name}()")
-        if self.depth >= self.bound:
+        if self.depth > self.bound:   # depth counts the entry function; allow `bound` nested calls
             self._raise("bound", p.alive, f"more than {self.bound} nested calls")
             return BOTTOM
         if not self._feasible(p.alive):
             return BOTTOM
         self.callers.append(p)
         try:
-            returns = self._invoke(fn, args, p.alive, _Frame(fn.closure))
+            returns = self._invoke(fn, args, p.alive, _Frame(fn.closure, fn.node))
         finally:
             self.callers.pop()
         nones = [g for g, v in returns if v is NONE]
@@ -574,6 +637,10 @@ class _Executor:
     def _s_FunctionDef(self, s, p):
         if s.decorator_list:
             raise Unsupported("decorated functions")
+        changed = (_free_names(s) & _changed_names(p.frame.node)) - {s.name} if p.frame.node else set()
+        if changed:
+            raise Unsupported(f"nested function '{s.name}' reads {sorted(changed)}, which the enclosing "
+                              "function changes (closures over changing variables are not modeled)")
         p.env[s.name] = _FuncRef(s, p.env)
 
     def _s_Import(self, s, p):
@@ -702,7 +769,7 @@ class _Executor:
         name = target.value.id
         if name not in p.env:
             raise Unsupported("item assignment to an enclosing-scope variable")
-        base = p.env[name]
+        base = self._lookup(name, p)
         if isinstance(base, SymDict):
             self._mutating(name, p)
             k = self._int(self._eval(target.slice, p))
@@ -724,7 +791,8 @@ class _Executor:
         i = self._index(base, self._int(self._eval(target.slice, p)), p)
         kind, term = self._elem_term(v)
         base = _retype(base, _unify_kind(base.kind, kind))
-        p.env[name] = replace(base, arr=z3.Store(base.arr, i, term), inner=_max_opt(base.inner, _inner_of(v)))
+        p.env[name] = replace(base, arr=z3.Store(base.arr, i, term), inner=_max_opt(base.inner, _inner_of(v)),
+                              inner_uids=base.inner_uids | _uids_of(v))
 
     # -- expressions -------------------------------------------------------
 
@@ -764,13 +832,14 @@ class _Executor:
         vals = [self._eval(e, p) for e in node.elts]
         if any(v is BOTTOM for v in vals):
             return BOTTOM
-        kind, terms, inner = None, [], 0
+        kind, terms, inner, inner_uids = None, [], 0, frozenset()
         for v in vals:
             k, t = self._elem_term(v)
             kind = _unify_kind(kind, k)
             terms.append(t)
             inner = _max_opt(inner, _inner_of(v))
-        return _const_list(terms, kind, inner)
+            inner_uids |= _uids_of(v)
+        return _const_list(terms, kind, inner, inner_uids)
 
     def _e_Dict(self, node, p):
         self._need("lists", "dict literal")
@@ -1035,10 +1104,21 @@ class _Executor:
             name = f.value.id
             if name not in p.env:
                 raise Unsupported(f"mutation of enclosing-scope variable '{name}'")
+            if p.readonly:
+                raise Unsupported(f"list.{f.attr}() inside a comprehension or a short-circuit/ternary "
+                                  "operand (its effect is not modeled)")
+            if f.attr != "pop" and len(node.args) != 1:
+                raise Unsupported(f"list.{f.attr}() arity")
+            if f.attr == "append":   # Python evaluates the argument before the call reads the list
+                arg = self._eval(node.args[0], p)
+            elif f.attr == "extend":
+                arg = self._iterable_list(node.args[0], p)
+            if f.attr != "pop" and arg is BOTTOM:
+                return BOTTOM
+            base = self._lookup(name, p)
+            if not isinstance(base, SymList) or base.kind == "str":
+                raise Unsupported(f"{type(base).__name__}.{f.attr}()")
             self._mutating(name, p)
-            base = p.env[name]
-            if base.kind == "str":
-                raise Unsupported(f"str.{f.attr}()")
             if f.attr == "pop":
                 if node.args:
                     raise Unsupported("list.pop(index)")
@@ -1048,22 +1128,14 @@ class _Executor:
                 new = replace(base, arr=z3.Store(base.arr, last, _zero(base.kind)), length=last)
                 p.env[name] = new
                 return v
-            if len(node.args) != 1:
-                raise Unsupported(f"list.{f.attr}() arity")
             if f.attr == "append":
-                v = self._eval(node.args[0], p)
-                if v is BOTTOM:
-                    return BOTTOM
-                kind, term = self._elem_term(v)
+                kind, term = self._elem_term(arg)
                 base = _retype(base, _unify_kind(base.kind, kind))
                 new = replace(base, arr=z3.Store(base.arr, base.length, term), length=base.length + 1,
-                              maxlen=_maxlen_add(base.maxlen, 1), inner=_max_opt(base.inner, _inner_of(v)))
+                              maxlen=_maxlen_add(base.maxlen, 1), inner=_max_opt(base.inner, _inner_of(arg)),
+                              inner_uids=base.inner_uids | _uids_of(arg))
             else:
-                other = self._iterable_list(node.args[0], p)
-                if other is BOTTOM:
-                    return BOTTOM
-                c = self._concat(base, other)
-                new = replace(c, uids=base.uids)
+                new = replace(self._concat(base, arg), uids=base.uids)
             p.env[name] = new
             return NONE
         raise Unsupported(f"method call .{f.attr}()")
@@ -1087,11 +1159,15 @@ class _Executor:
 
     def _b_abs(self, node, p):
         (v,) = self._args(node, p, 1)
+        if v is BOTTOM:
+            return BOTTOM
         v = self._int(v)
         return z3.If(v < 0, -v, v)
 
     def _b_ord(self, node, p):
         (v,) = self._args(node, p, 1)
+        if v is BOTTOM:
+            return BOTTOM
         if not isinstance(v, SymList) or v.kind != "str":
             raise Unsupported("ord() of a non-str")
         self._raise("TypeError", _and(p.alive, v.length != 1), "ord() expects one character")
@@ -1102,9 +1178,10 @@ class _Executor:
             a = node.args[0]
             if isinstance(a, ast.BinOp) and isinstance(a.op, ast.Pow) and isinstance(a.right, ast.Constant) \
                     and a.right.value == 0.5:
-                return self._isqrt(self._int(self._eval(a.left, p)), p)
+                x = self._eval(a.left, p)
+                return BOTTOM if x is BOTTOM else self._isqrt(self._int(x), p)
         (v,) = self._args(node, p, 1)
-        return self._int(v)
+        return BOTTOM if v is BOTTOM else self._int(v)
 
     def _isqrt(self, x, p):
         """int(x ** 0.5) == isqrt(x) exactly for 0 <= x < 2**52."""
@@ -1127,6 +1204,8 @@ class _Executor:
 
     def _b_reversed(self, node, p):
         (v,) = self._args(node, p, 1)
+        if v is BOTTOM:
+            return BOTTOM
         if not isinstance(v, SymList):
             raise Unsupported("reversed() of a non-list")
         return self._reversed(v)
@@ -1137,12 +1216,14 @@ class _Executor:
     def _b_any(self, node, p):
         if len(node.args) != 1 or node.keywords:
             raise Unsupported("any() arity")
-        return _or(*[_and(g, self._truthy(v)) for g, v in self._pairs(node.args[0], p)])
+        pairs = self._pairs(node.args[0], p, decisive=self._truthy)
+        return _or(*[_and(g, self._truthy(v)) for g, v in pairs])
 
     def _b_all(self, node, p):
         if len(node.args) != 1 or node.keywords:
             raise Unsupported("all() arity")
-        return _not(_or(*[_and(g, _not(self._truthy(v))) for g, v in self._pairs(node.args[0], p)]))
+        pairs = self._pairs(node.args[0], p, decisive=lambda v: _not(self._truthy(v)))
+        return _not(_or(*[_and(g, _not(self._truthy(v))) for g, v in pairs]))
 
     def _b_sum(self, node, p):
         if len(node.args) != 1 or node.keywords:
@@ -1242,27 +1323,33 @@ class _Executor:
             self._raise("bound", _and(p.alive, cond), f"sequence longer than {self.bound}")
         return pairs
 
-    def _pairs(self, node, p):
-        """(guard, element) pairs for anything iterable, including generator expressions."""
+    def _pairs(self, node, p, decisive=None):
+        """(guard, element) pairs for anything iterable, including generator expressions.
+
+        `decisive(v)` (any/all): a lazy generator stops at the first element for
+        which it holds, so later elements are only evaluated on paths without one.
+        """
         if isinstance(node, (ast.GeneratorExp, ast.ListComp)):
-            return self._comp_pairs(node, p)
+            return self._comp_pairs(node, p, decisive if isinstance(node, ast.GeneratorExp) else None)
         count, item = self._plan(node, p)
         return self._pairs_from_plan(count, item, p)
 
-    def _comp_pairs(self, node, p):
+    def _comp_pairs(self, node, p, decisive=None):
         self._need("loops", "comprehension")
         if len(node.generators) != 1 or node.generators[0].is_async:
             raise Unsupported("comprehension with several `for` clauses")
         gen = node.generators[0]
-        out = []
+        out, going = [], TRUE
         for g, it in self._pairs(gen.iter, p):
-            q = _Path(p.frame, dict(p.env), g)
+            q = _Path(p.frame, dict(p.env), _and(g, going), readonly=True)
             self._assign(gen.target, it, q)
             for cond in gen.ifs:
                 q.alive = _and(q.alive, self._truthy(self._eval(cond, q)))
             v = self._eval(node.elt, q)
             if v is not BOTTOM and not z3.is_false(q.alive):
                 out.append((q.alive, v))
+                if decisive is not None:
+                    going = _and(going, _not(_and(q.alive, decisive(v))))
         return out
 
     def _iterable_list(self, node, p):
@@ -1276,9 +1363,10 @@ class _Executor:
         raise Unsupported(f"expected a list, got {type(v).__name__}")
 
     def _pairs_to_list(self, pairs) -> SymList:
-        kind, arr, length, inner = None, None, _ZERO, 0
+        kind, arr, length, inner, inner_uids = None, None, _ZERO, 0, frozenset()
         for g, v in pairs:
             inner = _max_opt(inner, _inner_of(v))
+            inner_uids |= _uids_of(v)
             k, term = self._elem_term(v)
             kind = _unify_kind(kind, k)
             if arr is None:
@@ -1288,7 +1376,7 @@ class _Executor:
             length = z3.simplify(_ite(g, length + 1, length))
         if arr is None:
             return _const_list([], None)
-        return SymList(arr, length, kind, len(pairs), inner=inner)
+        return SymList(arr, length, kind, len(pairs), inner=inner, inner_uids=inner_uids)
 
     # -- list primitives ---------------------------------------------------
 
@@ -1321,7 +1409,7 @@ class _Executor:
             return e
         if lst.kind == "str":
             return SymList(z3.Store(_EMPTY_INTS, 0, e), _ONE, "str", 1)
-        return SymList(IntList.elems(e), IntList.size(e), "int", lst.inner, lst.uids)
+        return SymList(IntList.elems(e), IntList.size(e), "int", lst.inner, lst.inner_uids)
 
     def _concat(self, a: SymList, b: SymList) -> SymList:
         if not isinstance(a, SymList) or not isinstance(b, SymList):
@@ -1331,18 +1419,18 @@ class _Executor:
         kind = _unify_kind(a.kind, b.kind)
         a, b = _retype(a, kind), _retype(b, kind)
         maxlen = _maxlen_add(a.maxlen, b.maxlen)
-        inner = _max_opt(a.inner, b.inner)
+        inner, inner_uids = _max_opt(a.inner, b.inner), a.inner_uids | b.inner_uids
         if _const_int(a.length) == 0:
-            return SymList(b.arr, b.length, kind, b.maxlen, inner=inner)
+            return SymList(b.arr, b.length, kind, b.maxlen, inner=inner, inner_uids=inner_uids)
         nb = _const_int(b.length)
         if nb is not None and nb <= 4:
             arr = a.arr
             for t in range(nb):
                 arr = z3.Store(arr, a.length + t, z3.Select(b.arr, t))
-            return SymList(arr, z3.simplify(a.length + nb), kind, maxlen, inner=inner)
+            return SymList(arr, z3.simplify(a.length + nb), kind, maxlen, inner=inner, inner_uids=inner_uids)
         j = z3.Int("__j")
         arr = z3.Lambda([j], z3.If(j < a.length, z3.Select(a.arr, j), z3.Select(b.arr, j - a.length)))
-        return SymList(arr, a.length + b.length, kind, maxlen, inner=inner)
+        return SymList(arr, a.length + b.length, kind, maxlen, inner=inner, inner_uids=inner_uids)
 
     def _slice(self, lst: SymList, lo, hi) -> SymList:
         n = lst.length
@@ -1359,12 +1447,12 @@ class _Executor:
         new_len = z3.If(hi2 > lo2, hi2 - lo2, _ZERO)
         j = z3.Int("__j")
         arr = z3.Lambda([j], z3.If(z3.And(j >= 0, j < new_len), z3.Select(lst.arr, j + lo2), _zero(lst.kind)))
-        return SymList(arr, new_len, lst.kind, lst.maxlen, inner=lst.inner)
+        return SymList(arr, new_len, lst.kind, lst.maxlen, inner=lst.inner, inner_uids=lst.inner_uids)
 
     def _reversed(self, lst: SymList) -> SymList:
         n, j = lst.length, z3.Int("__j")
         arr = z3.Lambda([j], z3.If(z3.And(j >= 0, j < n), z3.Select(lst.arr, n - 1 - j), _zero(lst.kind)))
-        return SymList(arr, n, lst.kind, lst.maxlen, inner=lst.inner)
+        return SymList(arr, n, lst.kind, lst.maxlen, inner=lst.inner, inner_uids=lst.inner_uids)
 
     def _repeat(self, lst: SymList, n) -> SymList:
         if _const_int(lst.length) != 1:
@@ -1373,7 +1461,8 @@ class _Executor:
         length = z3.If(n > 0, n, _ZERO)
         arr = z3.Lambda([j], z3.If(z3.And(j >= 0, j < length), v, _zero(lst.kind)))
         c = _const_int(n)
-        return SymList(arr, length, lst.kind, None if c is None else max(c, 0), inner=lst.inner)
+        return SymList(arr, length, lst.kind, None if c is None else max(c, 0), inner=lst.inner,
+                       inner_uids=lst.inner_uids)
 
     # -- coercions ---------------------------------------------------------
 
@@ -1478,7 +1567,8 @@ def concrete(model: z3.ModelRef, v, limit: int = 64):
 # Public API
 # ---------------------------------------------------------------------------
 
-_BAD_CODES = ("none", "bound", "IndexError", "KeyError", "ZeroDivisionError", "ValueError", "TypeError")
+_BAD_CODES = ("none", "bound", "IndexError", "KeyError", "ZeroDivisionError", "ValueError", "TypeError",
+              "UnboundLocalError")
 
 
 def _prepare(arg_types: str, pre: str, helpers: str, opts: BoundedOptions):
@@ -1514,6 +1604,8 @@ def verify_bounded(source: str, fn_name: str, arg_types: str, post: str, pre: st
     res, _ = _check(solver, _and(pre_issue), opts)
     if res == z3.sat:
         raise Unsupported("precondition cannot be evaluated within the spec bound")
+    if res == z3.unknown:
+        return BoundedResult("unknown", "could not decide whether the precondition stays within the spec bound", k)
     solver.add(pre_term)
     if _check(solver, TRUE, opts)[0] == z3.unsat:
         return BoundedResult("unsupported", "precondition is unsatisfiable", k)
@@ -1527,7 +1619,9 @@ def verify_bounded(source: str, fn_name: str, arg_types: str, post: str, pre: st
         post_ex = _Executor(spec_globals, solver, opts, program=False)
         post_term = post_ex.eval_spec(post, {**inputs, "result": out.value}, value_ok)
         post_issue = post_ex.issue()
-    bad = _or(_and(value_ok, _not(post_term)), *[out.code == CODES[c] for c in _BAD_CODES])
+    # Where the spec itself could not be evaluated (post_issue), its value is partial: those
+    # inputs can only make the result `unsupported` (checked below), never `refuted`.
+    bad = _or(_and(value_ok, _not(post_issue), _not(post_term)), *[out.code == CODES[c] for c in _BAD_CODES])
 
     res, model = _check(solver, bad, opts)
     if res == z3.sat:
@@ -1565,6 +1659,9 @@ def check_equivalence(source_a: str, source_b: str, fn_name: str, arg_types: str
     res, _ = _check(solver, _and(pre_issue), opts)
     if res == z3.sat:
         raise Unsupported("precondition cannot be evaluated within the spec bound")
+    if res == z3.unknown:
+        return EquivResult("unknown", "could not decide whether the precondition stays within the spec bound",
+                           opts.bound)
     solver.add(pre_term)
     args = [inputs[n] for n, _ in parse_arg_types(arg_types)]
     out_a = _Executor(load_globals(source_a), solver, opts, program=True).run(fn_name, args)

@@ -94,6 +94,8 @@ def divides(d, x):
 
 
 def is_gcd(g, a, b):
+    if a == 0 and b == 0:   # every int divides 0; take gcd(0, 0) == 0 as Python's math.gcd does
+        return g == 0
     if not (divides(g, a) and divides(g, b)):
         return False
     for d in range(1, max(a, b) + 1):
@@ -370,7 +372,7 @@ SPECS = {
     "subsequences": Spec("a: int, b: int, k: int", "k >= 1", "len(result) == combos(b - a, k) and all(is_asc_in(s, a, b, k) for s in result) and pairwise_distinct(result)", "Output: A list of all length-k ascending sequences of ints in range(a, b)", "-1 <= b - a <= 3 and k <= 3"),
     "to_base": Spec("num: int, b: int", "num > 0 and 2 <= b <= 36", "is_base_repr(result, b) and from_base(result, b) == num", "Output: A string representing the value of num in base b.", "num <= 255"),
     "topological_ordering": Spec("nodes: list[node]", "is_acyclic_graph(nodes)", "is_topological_order(result, nodes)", "Output: An OrderedSet containing the elements of nodes in an order that puts each node before all the nodes it has edges to"),
-    "wrap": Spec("text: str, cols: int", "cols > 0", "all(len(line) <= cols for line in result) and ''.join(result) == text", "Output: An ordered list of strings, each no longer than the column width, such that the concatenation of the strings returns the original text"),
+    "wrap": Spec("text: str, cols: int", "cols > 0", "all(len(line) <= cols for line in result) and ''.join(result) == text", "Output: An ordered list of strings, each no longer than the column width, such that the concatenation of the strings returns the original text", partial=True),
 }
 
 # Programs the bounded-equivalence mode targets (step 4d); all others are

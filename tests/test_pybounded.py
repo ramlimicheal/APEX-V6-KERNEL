@@ -109,3 +109,89 @@ def test_equivalence_of_a_program_with_itself():
     r = check_equivalence(GOOD_MAX, GOOD_MAX, "list_max", "xs: list[int]",
                           options=BoundedOptions(list_cap=3))
     assert r.status == "equivalent_up_to_bound"
+
+
+# --- Review fixes (PR #1): one test per soundness fix ---------------------------
+
+def test_variable_bound_on_some_paths_only_raises_unbound_local():
+    src = "def f(x):\n    if x:\n        y = 1\n    return y\n"
+    r = verify_bounded(src, "f", "x: int", "result == 1")
+    assert r.status == "refuted"
+    assert r.outcome == "UnboundLocalError" and r.counterexample == {"x": 0}
+
+
+def test_mutating_a_row_shared_through_a_shallow_copy_is_rejected():
+    src = ("def f(n):\n    m = [[1]]\n    row = list(m)[0]\n    row.append(2)\n"
+           "    return len(m[0])\n")   # Python: 2 (the row is shared)
+    with pytest.raises(UnsupportedConstructError, match="aliasing"):
+        verify_bounded(src, "f", "n: int", "result == 1")
+
+
+def test_append_reads_the_list_after_evaluating_its_argument():
+    src = "def f(n):\n    xs = [1, 2]\n    xs.append(xs.pop())\n    return len(xs)\n"
+    assert verify_bounded(src, "f", "n: int", "result == 2").status == "proved_up_to_bound"
+
+
+def test_side_effects_inside_a_comprehension_are_rejected():
+    src = "def f(n):\n    xs = []\n    ys = [xs.append(1) for _ in range(1)]\n    return len(xs)\n"
+    with pytest.raises(UnsupportedConstructError, match="comprehension"):
+        verify_bounded(src, "f", "n: int", "result == 0")
+
+
+def test_side_effects_in_a_skipped_operand_are_rejected():
+    src = "def f(flag):\n    xs = []\n    flag and xs.append(1)\n    return len(xs)\n"
+    with pytest.raises(UnsupportedConstructError, match="short-circuit"):
+        verify_bounded(src, "f", "flag: int", "result == 0")
+
+
+def test_spec_helper_past_its_bound_is_unsupported_not_refuted():
+    helpers = "def count_up(n):\n    i = 0\n    while i < n:\n        i += 1\n    return i\n"
+    r = verify_bounded("def f(x):\n    return x\n", "f", "x: int", "count_up(x) == result",
+                       pre="0 <= x <= 100", helpers=helpers, options=BoundedOptions(spec_bound=8))
+    assert r.status == "unsupported"
+
+
+def test_any_stops_at_the_first_true_element():
+    src = "def f(xs):\n    return any(1 // x > 0 for x in xs)\n"
+    r = verify_bounded(src, "f", "xs: list[int]", "result", pre="xs == [1, 0]")
+    assert r.status == "proved_up_to_bound"   # Python never evaluates 1 // 0 here
+
+
+def test_bound_counts_nested_calls_not_the_entry_function():
+    src = "def h(n):\n    return n + 1\ndef g(n):\n    return h(n)\ndef f(n):\n    return g(n)\n"
+    one = BoundedOptions(bound=1)
+    assert verify_bounded(src, "g", "n: int", "result == n + 1", options=one).status == "proved_up_to_bound"
+    r = verify_bounded(src, "f", "n: int", "result == n + 1", options=one)
+    assert r.status == "refuted" and r.outcome == "bound"
+
+
+def test_builtins_propagate_a_dead_path_like_len():
+    r = verify_bounded("def f(n):\n    return abs([][0])\n", "f", "n: int", "result >= 0")
+    assert r.status == "refuted" and r.outcome == "IndexError"
+
+
+def test_gcd_spec_requires_zero_for_zero_inputs():
+    from bench.specs import is_gcd
+    assert is_gcd(0, 0, 0)
+    assert not is_gcd(5, 0, 0)
+
+
+def test_str_inputs_are_printable_ascii_only():
+    # The modeled domain: str inputs of length <= cap made of characters with codes 32..126.
+    src = "def f(s):\n    for ch in s:\n        if ch == '\\n':\n            return 1\n    return 0\n"
+    assert verify_bounded(src, "f", "s: str", "result == 0").status == "proved_up_to_bound"
+    r = verify_bounded("def f(s):\n    return s[0]\n", "f", "s: str", "True")
+    assert r.status == "refuted" and r.counterexample == {"s": ""}
+
+
+def test_decorated_functions_are_rejected():
+    src = "@staticmethod\ndef f(x):\n    return x\n"
+    with pytest.raises(UnsupportedConstructError, match="decorated"):
+        verify_bounded(src, "f", "x: int", "result == x")
+
+
+def test_closure_over_a_changing_variable_is_rejected():
+    src = ("def f(x):\n    def helper():\n        return x\n    if x > 0:\n        x += 1\n"
+           "    return helper()\n")
+    with pytest.raises(UnsupportedConstructError, match="closures"):
+        verify_bounded(src, "f", "x: int", "result == x")

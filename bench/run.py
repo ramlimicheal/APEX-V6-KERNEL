@@ -124,7 +124,7 @@ def evaluate_equiv(name):
     spec = SPECS[name]
     buggy, correct = _paths(name)
     res = {"name": name, "in_scope": name in EQUIV_SCOPE}
-    opts = STEP_OPTIONS["equiv"]
+    opts = dataclasses.replace(STEP_OPTIONS["equiv"], list_cap=EQUIV_CAP_OVERRIDE.get(name, 4))
     pre = f"({spec.pre}) and ({spec.domain})"
     try:
         r = check_equivalence(buggy.read_text(), correct.read_text(), name, spec.args, pre, HELPERS, opts)
@@ -148,9 +148,13 @@ def evaluate_equiv(name):
     return {**res, "outcome": "caught", "reason": f"input {r.counterexample}: buggy {real_b} vs correct {real_c}"}
 
 
+EQUIV_CAP_OVERRIDE = {}   # --cap with --step equiv (measurement only; results use 4)
+
+
 def evaluate(step, name, cap=None):
     if cap is not None:   # --cap: measure a program at another list cap (not used for results)
         SPECS[name] = dataclasses.replace(SPECS[name], cap=cap)
+        EQUIV_CAP_OVERRIDE[name] = cap
     t0 = time.time()
     out = evaluate_equiv(name) if step == "equiv" else evaluate_spec(step, name)
     out["seconds"] = round(time.time() - t0, 1)

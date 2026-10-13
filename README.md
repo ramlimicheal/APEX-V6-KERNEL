@@ -124,9 +124,9 @@ arrays with a symbolic length. Every unroll carries an *unwinding assertion*: an
 input that needs more than K iterations is reported, never silently dropped.
 So **"proved up to bound K"** means: for every input that meets the
 precondition, has lists no longer than the per-program cap (8, or 3–4 where
-symbolic lengths were too slow) and stays inside the listed int domain (e.g.
-`n <= 255` for bitcount), the function finishes within K and meets the
-postcondition. It is **not** a proof for larger inputs. Equivalence mode (d)
+symbolic lengths were too slow), has **strings made of printable ASCII only
+(codes 32–126)** and stays inside the listed int domain (e.g. `n <= 255` for
+bitcount), the function finishes within K and meets the postcondition. It is **not** a proof for larger inputs. Equivalence mode (d)
 compares the buggy and correct files directly, with K = 12 and lists of
 length 0..4. Its false-alarm check is each correct file against itself.
 
