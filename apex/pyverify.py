@@ -15,7 +15,8 @@ Honest scope (fail-closed, like everything else in this pipeline):
 - Anything outside the subset raises `UnsupportedConstructError` rather than
   guessing. Loops, calls, floats, strings, side effects: rejected.
 This mirrors how real bounded verifiers start; growing the subset is
-engineering, not magic.
+engineering, not magic. `apex.pybounded` grows it (bounded loops, inlined
+calls, int lists) at the price of proofs that hold only up to a bound.
 """
 
 from __future__ import annotations

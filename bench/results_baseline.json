@@ -1,0 +1,693 @@
+{
+ "step": "baseline",
+ "quixbugs_commit": "4257f44b0ff1181dedaedee6a447e133219fcebf",
+ "options": null,
+ "summary": {
+  "caught": 0,
+  "missed": 0,
+  "false_alarm": 0,
+  "unsupported": 40
+ },
+ "programs": [
+  {
+   "name": "bitcount",
+   "partial_spec": false,
+   "domain": "n <= 255",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "breadth_first_search",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "bucketsort",
+   "partial_spec": false,
+   "domain": "k <= 8",
+   "list_cap": 4,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "depth_first_search",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "detect_cycle",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "find_first_in_sorted",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "find_in_sorted",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: FunctionDef"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: FunctionDef"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: FunctionDef",
+   "seconds": 0.0
+  },
+  {
+   "name": "flatten",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: For"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: For"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: For",
+   "seconds": 0.0
+  },
+  {
+   "name": "gcd",
+   "partial_spec": false,
+   "domain": "a <= 20 and b <= 20",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported expression: Call"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported expression: Call"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported expression: Call",
+   "seconds": 0.0
+  },
+  {
+   "name": "get_factors",
+   "partial_spec": false,
+   "domain": "n <= 50",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported expression: List"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported expression: List"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported expression: List",
+   "seconds": 0.0
+  },
+  {
+   "name": "hanoi",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "only plain positional int args supported"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "only plain positional int args supported"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: only plain positional int args supported",
+   "seconds": 0.0
+  },
+  {
+   "name": "is_valid_parenthesization",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "kheapsort",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Import"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Import"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Import",
+   "seconds": 0.0
+  },
+  {
+   "name": "knapsack",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: ImportFrom"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: ImportFrom"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: ImportFrom",
+   "seconds": 0.0
+  },
+  {
+   "name": "kth",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "lcs_length",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: ImportFrom"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: ImportFrom"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: ImportFrom",
+   "seconds": 0.0
+  },
+  {
+   "name": "levenshtein",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported constant: ''"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported constant: ''"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported constant: ''",
+   "seconds": 0.0
+  },
+  {
+   "name": "lis",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "longest_common_subsequence",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "verifier crashed: Z3Exception: Value cannot be converted into a Z3 Boolean value"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "verifier crashed: Z3Exception: Value cannot be converted into a Z3 Boolean value"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: verifier crashed: Z3Exception: Value cannot be converted into a Z3 Boolean value",
+   "seconds": 0.0
+  },
+  {
+   "name": "max_sublist_sum",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "mergesort",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: FunctionDef"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: FunctionDef"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: FunctionDef",
+   "seconds": 0.0
+  },
+  {
+   "name": "minimum_spanning_tree",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "next_palindrome",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 3,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "next_permutation",
+   "partial_spec": true,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: For"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: For"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: For",
+   "seconds": 0.0
+  },
+  {
+   "name": "pascal",
+   "partial_spec": false,
+   "domain": "n <= 6",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "possible_change",
+   "partial_spec": false,
+   "domain": "total <= 4",
+   "list_cap": 4,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "verifier crashed: Z3Exception: Value cannot be converted into a Z3 Boolean value"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "powerset",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 3,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "quicksort",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "verifier crashed: Z3Exception: Value cannot be converted into a Z3 Boolean value"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "verifier crashed: Z3Exception: Value cannot be converted into a Z3 Boolean value"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: verifier crashed: Z3Exception: Value cannot be converted into a Z3 Boolean value",
+   "seconds": 0.0
+  },
+  {
+   "name": "reverse_linked_list",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "rpn_eval",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: FunctionDef"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: FunctionDef"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: FunctionDef",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_path_length",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "expected exactly one function definition"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "expected exactly one function definition"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: expected exactly one function definition",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_path_lengths",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_paths",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "shunting_yard",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "sieve",
+   "partial_spec": false,
+   "domain": "max <= 9",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "sqrt",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "subsequences",
+   "partial_spec": false,
+   "domain": "-1 <= b - a <= 3 and k <= 3",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported expression: List"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported expression: List"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported expression: List",
+   "seconds": 0.0
+  },
+  {
+   "name": "to_base",
+   "partial_spec": false,
+   "domain": "num <= 255",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "topological_ordering",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  },
+  {
+   "name": "wrap",
+   "partial_spec": true,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "unsupported statement: Assign"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: unsupported statement: Assign",
+   "seconds": 0.0
+  }
+ ]
+}

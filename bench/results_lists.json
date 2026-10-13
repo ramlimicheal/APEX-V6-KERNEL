@@ -1,0 +1,1123 @@
+{
+ "step": "lists",
+ "quixbugs_commit": "4257f44b0ff1181dedaedee6a447e133219fcebf",
+ "options": {
+  "bound": 8,
+  "list_cap": 8,
+  "spec_bound": 64,
+  "loops": true,
+  "calls": true,
+  "lists": true,
+  "timeout_ms": 120000,
+  "feasibility_timeout_ms": 5000
+ },
+ "summary": {
+  "caught": 22,
+  "missed": 0,
+  "false_alarm": 0,
+  "unsupported": 18
+ },
+ "programs": [
+  {
+   "name": "bitcount",
+   "partial_spec": false,
+   "domain": "n <= 255",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with bound",
+    "counterexample": {
+     "n": 206
+    },
+    "predicted_outcome": "bound",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "TIMEOUT"
+     }
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'n': 206} confirmed by a real run",
+   "seconds": 20.8
+  },
+  {
+   "name": "breadth_first_search",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "bucketsort",
+   "partial_spec": false,
+   "domain": "k <= 8",
+   "list_cap": 4,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "arr": [
+      7
+     ],
+     "k": 8
+    },
+    "predicted_outcome": "value",
+    "predicted": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "[0, 0, 0, 0, 0, 0, 0]"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 4, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'arr': [7], 'k': 8} confirmed by a real run",
+   "seconds": 60.3
+  },
+  {
+   "name": "depth_first_search",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "detect_cycle",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "find_first_in_sorted",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with IndexError",
+    "counterexample": {
+     "arr": [
+      -9864,
+      5464,
+      15577,
+      15577,
+      16760,
+      16760
+     ],
+     "x": 16761
+    },
+    "predicted_outcome": "IndexError",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "IndexError"
+     }
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'arr': [-9864, 5464, 15577, 15577, 16760, 16760], 'x': 16761} confirmed by a real run",
+   "seconds": 15.8
+  },
+  {
+   "name": "find_in_sorted",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with bound",
+    "counterexample": {
+     "arr": [
+      67761,
+      81236,
+      81236,
+      81237,
+      81238,
+      81240
+     ],
+     "x": 81239
+    },
+    "predicted_outcome": "bound",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "RecursionError"
+     }
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'arr': [67761, 81236, 81236, 81237, 81238, 81240], 'x': 81239} confirmed by a real run",
+   "seconds": 11.2
+  },
+  {
+   "name": "flatten",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "arbitrarily nested lists are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "arbitrarily nested lists are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: arbitrarily nested lists are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "gcd",
+   "partial_spec": false,
+   "domain": "a <= 20 and b <= 20",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with bound",
+    "counterexample": {
+     "a": 0,
+     "b": 1
+    },
+    "predicted_outcome": "bound",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "RecursionError"
+     }
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'a': 0, 'b': 1} confirmed by a real run",
+   "seconds": 66.0
+  },
+  {
+   "name": "get_factors",
+   "partial_spec": false,
+   "domain": "n <= 50",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "n": 48
+    },
+    "predicted_outcome": "value",
+    "predicted": [
+     2,
+     2,
+     2,
+     2
+    ],
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "[2, 2, 2, 2]"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'n': 48} confirmed by a real run",
+   "seconds": 98.8
+  },
+  {
+   "name": "hanoi",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "only plain positional parameters are modeled (no defaults / *args)"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "only plain positional parameters are modeled (no defaults / *args)"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: only plain positional parameters are modeled (no defaults / *args)",
+   "seconds": 0.0
+  },
+  {
+   "name": "is_valid_parenthesization",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "parens": "((()())("
+    },
+    "predicted_outcome": "value",
+    "predicted": true,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "True"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'parens': '((()())('} confirmed by a real run",
+   "seconds": 86.6
+  },
+  {
+   "name": "kheapsort",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "generator functions (yield) are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "generator functions (yield) are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: generator functions (yield) are not modeled",
+   "seconds": 0.3
+  },
+  {
+   "name": "knapsack",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "lists of tuples are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "lists of tuples are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: lists of tuples are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "kth",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with IndexError",
+    "counterexample": {
+     "arr": [
+      -4,
+      -3,
+      -2,
+      -1
+     ],
+     "k": 1
+    },
+    "predicted_outcome": "IndexError",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "IndexError"
+     }
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 4, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'arr': [-4, -3, -2, -1], 'k': 1} confirmed by a real run",
+   "seconds": 7.3
+  },
+  {
+   "name": "lcs_length",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "import inside a function body"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "import inside a function body"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: import inside a function body",
+   "seconds": 0.0
+  },
+  {
+   "name": "levenshtein",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "source": " !",
+     "target": "! \"!"
+    },
+    "predicted_outcome": "value",
+    "predicted": 4,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "4"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 4, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'source': ' !', 'target': '! \"!'} confirmed by a real run",
+   "seconds": 127.5
+  },
+  {
+   "name": "lis",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "arr": [
+      -3,
+      -2,
+      -4,
+      -1
+     ]
+    },
+    "predicted_outcome": "value",
+    "predicted": 2,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "2"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 4, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'arr': [-3, -2, -4, -1]} confirmed by a real run",
+   "seconds": 10.0
+  },
+  {
+   "name": "longest_common_subsequence",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "a": "\"# \"",
+     "b": "\"$!%"
+    },
+    "predicted_outcome": "value",
+    "predicted": "\"\"",
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "'\"\"'"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 4, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'a': '\"# \"', 'b': '\"$!%'} confirmed by a real run",
+   "seconds": 155.2
+  },
+  {
+   "name": "max_sublist_sum",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "arr": [
+      -2,
+      24391,
+      1
+     ]
+    },
+    "predicted_outcome": "value",
+    "predicted": 24390,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "24390"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'arr': [-2, 24391, 1]} confirmed by a real run",
+   "seconds": 16.3
+  },
+  {
+   "name": "mergesort",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with bound",
+    "counterexample": {
+     "arr": [
+      0
+     ]
+    },
+    "predicted_outcome": "bound",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "RecursionError"
+     }
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 4, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'arr': [0]} confirmed by a real run",
+   "seconds": 85.4
+  },
+  {
+   "name": "minimum_spanning_tree",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "next_palindrome",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 3,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "digit_list": [
+      9
+     ]
+    },
+    "predicted_outcome": "value",
+    "predicted": [
+     1,
+     0,
+     1
+    ],
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "[1, 0, 1]"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 3, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'digit_list': [9]} confirmed by a real run",
+   "seconds": 441.2
+  },
+  {
+   "name": "next_permutation",
+   "partial_spec": true,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with none",
+    "counterexample": {
+     "perm": [
+      26133,
+      28939,
+      26134
+     ]
+    },
+    "predicted_outcome": "none",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "None"
+     },
+     "post_on_real_output": "spec raised TypeError"
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 4, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'perm': [26133, 28939, 26134]} confirmed by a real run",
+   "seconds": 20.4
+  },
+  {
+   "name": "pascal",
+   "partial_spec": false,
+   "domain": "n <= 6",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with IndexError",
+    "counterexample": {
+     "n": 3
+    },
+    "predicted_outcome": "IndexError",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "IndexError"
+     }
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'n': 3} confirmed by a real run",
+   "seconds": 12.1
+  },
+  {
+   "name": "possible_change",
+   "partial_spec": false,
+   "domain": "total <= 4",
+   "list_cap": 4,
+   "buggy": {
+    "status": "refuted",
+    "detail": "execution ends with ValueError",
+    "counterexample": {
+     "coins": [],
+     "total": 1
+    },
+    "predicted_outcome": "ValueError",
+    "predicted": null,
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "ValueError"
+     }
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 4, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'coins': [], 'total': 1} confirmed by a real run",
+   "seconds": 17.8
+  },
+  {
+   "name": "powerset",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 3,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "arr": [
+      1,
+      0,
+      2
+     ]
+    },
+    "predicted_outcome": "value",
+    "predicted": [
+     [
+      1,
+      0,
+      2
+     ]
+    ],
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "[[1, 0, 2]]"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 3, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'arr': [1, 0, 2]} confirmed by a real run",
+   "seconds": 66.6
+  },
+  {
+   "name": "quicksort",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 4,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "arr": [
+      -1,
+      24732,
+      24731,
+      24731
+     ]
+    },
+    "predicted_outcome": "value",
+    "predicted": [
+     -1,
+     24731,
+     24732
+    ],
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "[-1, 24731, 24732]"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 4, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'arr': [-1, 24732, 24731, 24731]} confirmed by a real run",
+   "seconds": 62.6
+  },
+  {
+   "name": "reverse_linked_list",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "graph / linked-list Node objects are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: graph / linked-list Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "rpn_eval",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "mixed float/str lists are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "mixed float/str lists are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: mixed float/str lists are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_path_length",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_path_lengths",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shortest_paths",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "dict arguments are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: dict arguments are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "shunting_yard",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "mixed int/str lists are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "mixed int/str lists are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: mixed int/str lists are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "sieve",
+   "partial_spec": false,
+   "domain": "max <= 9",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "max": 2
+    },
+    "predicted_outcome": "value",
+    "predicted": [],
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "[]"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'max': 2} confirmed by a real run",
+   "seconds": 10.6
+  },
+  {
+   "name": "sqrt",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "floats are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "floats are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: floats are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "subsequences",
+   "partial_spec": false,
+   "domain": "-1 <= b - a <= 3 and k <= 3",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "a": -3,
+     "b": 0,
+     "k": 1
+    },
+    "predicted_outcome": "value",
+    "predicted": [],
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "[]"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'a': -3, 'b': 0, 'k': 1} confirmed by a real run",
+   "seconds": 7.8
+  },
+  {
+   "name": "to_base",
+   "partial_spec": false,
+   "domain": "num <= 255",
+   "list_cap": 8,
+   "buggy": {
+    "status": "refuted",
+    "detail": "postcondition violated",
+    "counterexample": {
+     "num": 96,
+     "b": 16
+    },
+    "predicted_outcome": "value",
+    "predicted": "06",
+    "replay": {
+     "confirmed": true,
+     "real": {
+      "kind": "value",
+      "repr": "'06'"
+     },
+     "post_on_real_output": false
+    }
+   },
+   "correct": {
+    "status": "proved_up_to_bound",
+    "detail": "holds for every input meeting the precondition with lists of length <= 8, loops <= 8 iterations and <= 8 nested calls",
+    "counterexample": null,
+    "predicted_outcome": null,
+    "predicted": null
+   },
+   "outcome": "caught",
+   "reason": "counterexample {'num': 96, 'b': 16} confirmed by a real run",
+   "seconds": 264.6
+  },
+  {
+   "name": "topological_ordering",
+   "partial_spec": false,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "graph Node objects are not modeled"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "graph Node objects are not modeled"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: graph Node objects are not modeled",
+   "seconds": 0.0
+  },
+  {
+   "name": "wrap",
+   "partial_spec": true,
+   "domain": "True",
+   "list_cap": 8,
+   "buggy": {
+    "status": "unsupported",
+    "detail": "method call .rfind()"
+   },
+   "correct": {
+    "status": "unsupported",
+    "detail": "method call .rfind()"
+   },
+   "outcome": "unsupported",
+   "reason": "buggy: method call .rfind()",
+   "seconds": 0.0
+  }
+ ]
+}
